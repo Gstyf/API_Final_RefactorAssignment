@@ -169,6 +169,8 @@
     <ClCompile Include="Source\Resources.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Constants.hpp" />
+    <ClInclude Include="MyTexture.hpp" />
     <ClInclude Include="Source\game.h" />
     <ClInclude Include="Source\Resources.h" />
   </ItemGroup>
