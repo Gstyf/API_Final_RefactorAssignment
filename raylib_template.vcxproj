@@ -172,6 +172,7 @@
     <ClInclude Include="Constants.hpp" />
     <ClInclude Include="MyTexture.hpp" />
     <ClInclude Include="Source\game.h" />
+    <ClInclude Include="Source\MyTexture.hpp" />
     <ClInclude Include="Source\Resources.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
