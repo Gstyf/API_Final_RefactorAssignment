@@ -21,7 +21,10 @@
 *
 ********************************************************************************************/
 
+#pragma warning(push)
+#pragma warning(disable:ALL_CODE_ANALYSIS_WARNINGS)
 #include "raylib.h"
+#pragma warning(pop)
 #include "game.h"
 
 
@@ -32,8 +35,8 @@ int main(void)
 {    
     // Initialization
     //--------------------------------------------------------------------------------------
-    const int screenWidth = 1920;
-    const int screenHeight = 1080;
+    const int screenWidth = 1820;
+    const int screenHeight = 980;
 
     InitWindow(screenWidth, screenHeight, "SPACE INVADERS");
 
