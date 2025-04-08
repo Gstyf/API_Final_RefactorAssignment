@@ -25,6 +25,7 @@
 #pragma warning(disable:ALL_CODE_ANALYSIS_WARNINGS)
 #include "raylib.h"
 #pragma warning(pop)
+
 #include "game.h"
 
 
@@ -38,10 +39,12 @@ int main(void)
     const int screenWidth = 1820;
     const int screenHeight = 980;
 
+    //TODO: Make window RAII
     InitWindow(screenWidth, screenHeight, "SPACE INVADERS");
 
     SetTargetFPS(60);               // Set our game to run at 60 frames-per-second
 
+    //Fix two-step init
     Game game = { State::STARTSCREEN };
     Resources resources;
     game.resources = resources;
@@ -50,8 +53,7 @@ int main(void)
     
     //--------------------------------------------------------------------------------------
 
-    InitAudioDevice();
-
+    //TODO: State machine for update and render loop (main menu/game/credit screen)
     // Main game loop
     while (!WindowShouldClose())    // Detect window close button or ESC key
     {
@@ -67,9 +69,8 @@ int main(void)
         EndDrawing();
         //----------------------------------------------------------------------------------
     }
-
-    CloseAudioDevice();
     
+    //TODO: Delegate deinitialization to all wrappers for initialized objects' destructors
     // De-Initialization
     //--------------------------------------------------------------------------------------
     CloseWindow();        // Close window and OpenGL context

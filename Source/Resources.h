@@ -3,7 +3,7 @@
 #pragma warning(disable:ALL_CODE_ANALYSIS_WARNINGS)
 #include "raylib.h"
 #pragma warning(pop)
-#include "vector"
+#include <vector>
 
 struct Resources 
 {
@@ -14,5 +14,4 @@ struct Resources
 	Texture2D alienTexture;
 	Texture2D barrierTexture;
 	Texture2D laserTexture;
-
 };
