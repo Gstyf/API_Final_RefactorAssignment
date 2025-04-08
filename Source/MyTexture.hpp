@@ -7,6 +7,7 @@
 #include <stdexcept>
 
 class MyTexture final {
+public:
 	Texture2D myTex;
 
 	explicit MyTexture(std::string_view path)
@@ -24,5 +25,10 @@ class MyTexture final {
 	~MyTexture()
 	{
 		UnloadTexture(myTex);
+	}
+
+	Texture2D GetTexure()
+	{
+		return myTex;
 	}
 };
