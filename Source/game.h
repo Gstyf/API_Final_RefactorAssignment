@@ -3,8 +3,9 @@
 #pragma warning(disable:ALL_CODE_ANALYSIS_WARNINGS)
 #include "raylib.h"
 #pragma warning(pop)
-#include <vector>
+#include "MyTexture.hpp"
 #include "Resources.h"
+#include <array>
 #include <string>
 #include <stdexcept>
 
@@ -36,7 +37,7 @@ public:
 
 	float x_pos = 0;
 	float speed = 7;
-	float player_base_height = 70.0f;  
+	float player_base_height = 70.0f;
 	float radius = 50;
 	int lives = 3;
 	int direction = 0;
@@ -48,17 +49,17 @@ public:
 	void Initialize();
 	void Render(Texture2D texture);
 	void Update();
-	
+
 };
 
 
 struct Projectile
 {
-public: 
+public:
 	// INITIALIZE PROJECTILE WHILE DEFINING IF ITS PLAYER OR ENEMY 
-	Vector2 position = {0,0};
-	int speed = 15; 
-	bool active = true;  
+	Vector2 position = { 0,0 };
+	int speed = 15;
+	bool active = true;
 	EntityType type = {};
 
 	// LINE WILL UPDATE WITH POSITION FOR CALCULATIONS
@@ -70,39 +71,39 @@ public:
 	void Render(Texture2D texture);
 };
 
-struct Wall 
+struct Wall
 {
-public: 
-	Vector2 position; 
-	Rectangle rec; 
-	bool active; 
-	Color color; 
+public:
+	Vector2 position;
+	Rectangle rec;
+	bool active;
+	Color color;
 	int health = 50;
 	int radius = 60;
 
 
-	void Render(Texture2D texture); 
-	void Update(); 
+	void Render(Texture2D texture);
+	void Update();
 };
 
 struct Alien
 {
 public:
-	
-	Color color = WHITE; 
-	Vector2 position = {0, 0};
-	int x = 0; 
-	int y = 0; 
-	float radius = 30;
-	bool active = true;  
-	bool moveRight = true; 
-	
-	EntityType type = EntityType::ENEMY; 
 
-	int speed = 2; 
-		 
-	void Update(); 
-	void Render(Texture2D texture); 
+	Color color = WHITE;
+	Vector2 position = { 0, 0 };
+	int x = 0;
+	int y = 0;
+	float radius = 30;
+	bool active = true;
+	bool moveRight = true;
+
+	EntityType type = EntityType::ENEMY;
+
+	int speed = 2;
+
+	void Update();
+	void Render(Texture2D texture);
 };
 
 
@@ -118,7 +119,7 @@ struct Star
 
 struct Background
 {
-	
+
 
 	std::vector<Star> Stars;
 
@@ -162,7 +163,7 @@ struct Game
 	float shootTimer = 0;
 
 	//Aliens stuff? (idk cause liv wrote this)
-	Rectangle rec = { 0, 0 ,0 ,0 }; 
+	Rectangle rec = { 0, 0 ,0 ,0 };
 
 	int formationWidth = 8;
 	int formationHeight = 5;
@@ -171,7 +172,7 @@ struct Game
 	int formationY = 50;
 
 	bool newHighScore = false;
-	
+
 
 	void Start();
 	void End();
@@ -195,6 +196,16 @@ struct Game
 
 
 	// Entity Storage and Resources
+	MyTexture alienTexture{ "./Assets/Alien.png" };
+	MyTexture barrierTexture{ "./Assets/Barrier.png" };
+	MyTexture laserTexture{ "./Assets/Laser.png" };
+	std::array<MyTexture, 3> shipTextures{
+		MyTexture{"./Assets/Ship1.png"},
+		MyTexture{"./Assets/Ship2.png"},
+		MyTexture{"./Assets/Ship3.png"},
+	};
+
+
 	Resources resources;
 
 	Player player;
@@ -206,13 +217,13 @@ struct Game
 	std::vector<Alien> Aliens;
 
 	std::vector<PlayerData> Leaderboard = { {"Player 1", 500}, {"Player 2", 400}, {"Player 3", 300}, {"Player 4", 200}, {"Player 5", 100} };
-	
+
 	Background background;
 
 
 
 	Vector2 playerPos;
-	Vector2 alienPos; 
+	Vector2 alienPos;
 	Vector2 cornerPos;
 	float offset;
 

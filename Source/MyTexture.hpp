@@ -7,9 +7,8 @@
 #include <stdexcept>
 
 class MyTexture final {
-public:
 	Texture2D myTex;
-
+public:
 	explicit MyTexture(std::string_view path)
 	{
 		myTex = LoadTexture(path.data());
@@ -27,7 +26,7 @@ public:
 		UnloadTexture(myTex);
 	}
 
-	Texture2D GetTexure()
+	Texture2D GetTexure() const noexcept
 	{
 		return myTex;
 	}
