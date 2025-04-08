@@ -170,7 +170,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Constants.hpp" />
-    <ClInclude Include="MyTexture.hpp" />
     <ClInclude Include="Source\game.h" />
     <ClInclude Include="Source\MyTexture.hpp" />
     <ClInclude Include="Source\Resources.h" />

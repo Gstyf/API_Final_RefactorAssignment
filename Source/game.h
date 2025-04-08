@@ -6,6 +6,7 @@
 #include <vector>
 #include "Resources.h"
 #include <string>
+#include <stdexcept>
 
 
 enum struct State
@@ -129,6 +130,25 @@ struct Background
 
 struct Game
 {
+	explicit Game(State state)
+	{
+		gameState = state;
+		InitWindow(1800, 900, "SPACE INVADER");
+		if (!IsWindowReady())
+		{
+			throw std::runtime_error("Failed to open game window!");
+		}
+	}
+	Game(const Game&) = delete;
+	Game(Game&&) = delete;
+	Game& operator=(const Game&) = delete;
+	Game& operator=(Game&&) = delete;
+	~Game()
+	{
+		CloseWindow();
+	}
+
+
 	// Gamestate
 	State gameState = {};
 

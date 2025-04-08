@@ -36,20 +36,14 @@ int main(void)
 {    
     // Initialization
     //--------------------------------------------------------------------------------------
-    const int screenWidth = 1820;
-    const int screenHeight = 980;
-
-    //TODO: Make window RAII
-    InitWindow(screenWidth, screenHeight, "SPACE INVADERS");
 
     SetTargetFPS(60);               // Set our game to run at 60 frames-per-second
 
     //Fix two-step init
-    Game game = { State::STARTSCREEN };
+    Game game { State::STARTSCREEN };
     Resources resources;
     game.resources = resources;
     game.Launch();
-
     
     //--------------------------------------------------------------------------------------
 
@@ -70,12 +64,6 @@ int main(void)
         //----------------------------------------------------------------------------------
     }
     
-    //TODO: Delegate deinitialization to all wrappers for initialized objects' destructors
-    // De-Initialization
-    //--------------------------------------------------------------------------------------
-    CloseWindow();        // Close window and OpenGL context
-    //--------------------------------------------------------------------------------------
-
     std::string filename = "level.txt";  
 
     return 0;
