@@ -39,7 +39,7 @@ int main(void)
 
     SetTargetFPS(60);               // Set our game to run at 60 frames-per-second
 
-    //Fix two-step init
+    //TODO: Fix two-step init
     Game game { State::STARTSCREEN };
     Resources resources;
     game.resources = resources;

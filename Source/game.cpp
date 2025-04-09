@@ -14,6 +14,7 @@ float lineLength(Vector2 A, Vector2 B) //Uses pythagoras to calculate the length
 	return length;
 }
 
+//TODO: Use raylib function instead
 bool pointInCircle(Vector2 circlePos, float radius, Vector2 point) // Uses pythagoras to calculate if a point is within a circle or not
 {
 	float distanceToCentre = lineLength(circlePos, point);
@@ -29,20 +30,32 @@ bool pointInCircle(Vector2 circlePos, float radius, Vector2 point) // Uses pytha
 }
 
 
+const void  Game::InitResources()
+{
+	// Entity Storage and Resources
+	MyTexture alienTexture{ "./Assets/small.png" };
+	MyTexture barrierTexture{ "./Assets/Barrier.png" };
+	MyTexture laserTexture{ "./Assets/Laser.png" };
+	std::array<MyTexture, 3> shipTextures{
+		MyTexture{"./Assets/Ship1.png"},
+		MyTexture{"./Assets/Ship2.png"},
+		MyTexture{"./Assets/Ship3.png"},
+	};
+}
+
 void Game::Start()
 {
 	// creating walls 
-	float window_width = (float)GetScreenWidth(); 
-	float window_height = (float)GetScreenHeight(); 
-	float wall_distance = window_width / (wallCount + 1); 
+	float window_width = (float)GetScreenWidth();
+	float window_height = (float)GetScreenHeight();
+	float wall_distance = window_width / (wallCount + 1);
 	for (int i = 0; i < wallCount; i++)
 	{
 		Wall newWalls;
-		newWalls.position.y = window_height - 250; 
-		newWalls.position.x = wall_distance * (i + 1); 
+		newWalls.position.y = window_height - 250;
+		newWalls.position.x = wall_distance * (i + 1);
 
-		Walls.push_back(newWalls); 
-
+		Walls.push_back(newWalls);
 	}
 
 
@@ -53,7 +66,7 @@ void Game::Start()
 
 	//creating aliens
 	SpawnAliens();
-	
+
 
 	//creating background
 	Background newBackground;
@@ -89,6 +102,7 @@ void Game::Launch()
 	resources.Load();
 }
 
+//TODO: Refactor A LOT! Delegate updating to each affected object's own update function. Make new functions of the rest. (was 250 lines long!)
 void Game::Update()
 {
 	switch (gameState)
@@ -112,11 +126,11 @@ void Game::Update()
 
 		//Update Player
 		player.Update();
-		
+
 		//Update Aliens and Check if they are past player
 		for (int i = 0; i < Aliens.size(); i++)
 		{
-			Aliens[i].Update(); 
+			Aliens[i].Update();
 
 			if (Aliens[i].position.y > GetScreenHeight() - player.player_base_height)
 			{
@@ -138,10 +152,10 @@ void Game::Update()
 
 
 		// Update background with offset
-		playerPos = { player.x_pos, (float)player.player_base_height };
+		playerPos = { player.x_pos, (float)player.player_base_height }; //TODO: Why is playerPos reassigned here?
 		cornerPos = { 0, (float)player.player_base_height };
 		offset = lineLength(playerPos, cornerPos) * -1;
-		background.Update(offset / 15);
+		background.Update(offset / 15);//TODO: Magic number
 
 
 		//UPDATE PROJECTILE
@@ -155,6 +169,7 @@ void Game::Update()
 			Walls[i].Update();
 		}
 
+		//TODO: refactor collision check into own function
 		//CHECK ALL COLLISONS HERE
 		for (int i = 0; i < Projectiles.size(); i++)
 		{
@@ -179,11 +194,11 @@ void Game::Update()
 			{
 				if (Projectiles[i].type == EntityType::ENEMY_PROJECTILE)
 				{
-					if (CheckCollision({player.x_pos, GetScreenHeight() - player.player_base_height }, player.radius, Projectiles[i].lineStart, Projectiles[i].lineEnd))
+					if (CheckCollision({ player.x_pos, GetScreenHeight() - player.player_base_height }, player.radius, Projectiles[i].lineStart, Projectiles[i].lineEnd))
 					{
-						std::cout << "dead!\n"; 
-						Projectiles[i].active = false; 
-						player.lives -= 1; 
+						std::cout << "dead!\n";
+						Projectiles[i].active = false;
+						player.lives -= 1;
 					}
 				}
 			}
@@ -213,6 +228,7 @@ void Game::Update()
 			Projectiles.push_back(newProjectile);
 		}
 
+		//TODO: consider making alien shooting more interesting and erratic. Now only one alient will shoot every 2 seconds, and it is random which one.
 		//Aliens Shooting
 		shootTimer += 1;
 		if (shootTimer > 59) //once per second
@@ -233,6 +249,8 @@ void Game::Update()
 			shootTimer = 0;
 		}
 
+		//TODO: refactor cleanup into own function. 
+		//TODO: use ranged-fors instead
 		// REMOVE INACTIVE/DEAD ENITITIES
 		for (int i = 0; i < Projectiles.size(); i++)
 		{
@@ -261,21 +279,21 @@ void Game::Update()
 			}
 		}
 
-			
-		
 
-	break;
+
+
+		break;
 	case State::ENDSCREEN:
 		//Code
-	
+
 		//Exit endscreen
 		if (IsKeyReleased(KEY_ENTER) && !newHighScore)
 		{
 			Continue();
 		}
 
-	
 
+		//TODO: Refactor highscore screen into own function
 		if (newHighScore)
 		{
 			if (CheckCollisionPointRec(GetMousePosition(), textBox)) mouseOnText = true;
@@ -335,7 +353,7 @@ void Game::Update()
 
 
 		}
-		
+
 
 
 		break;
@@ -345,7 +363,7 @@ void Game::Update()
 	}
 }
 
-
+//TODO: Refactor biggly, this is a long function (130 lines)
 void Game::Render()
 {
 	switch (gameState)
@@ -372,6 +390,7 @@ void Game::Render()
 		//player rendering 
 		player.Render(resources.shipTextures[player.activeTexture]);
 
+		//TODO: Use range-fors instead
 		//projectile rendering
 		for (int i = 0; i < Projectiles.size(); i++)
 		{
@@ -381,7 +400,7 @@ void Game::Render()
 		// wall rendering 
 		for (int i = 0; i < Walls.size(); i++)
 		{
-			Walls[i].Render(resources.barrierTexture); 
+			Walls[i].Render(resources.barrierTexture);
 		}
 
 		//alien rendering  
@@ -401,9 +420,9 @@ void Game::Render()
 		//DrawText("END", 50, 50, 40, YELLOW);
 
 
-		
 
-		
+
+
 
 
 		if (newHighScore)
@@ -448,7 +467,7 @@ void Game::Render()
 					//Name needs to be shorter
 					DrawText("Press BACKSPACE to delete chars...", 600, 650, 20, YELLOW);
 				}
-				
+
 			}
 
 			// Explain how to continue when name is input
@@ -472,7 +491,7 @@ void Game::Render()
 			}
 		}
 
-		
+
 
 
 		break;
@@ -529,6 +548,7 @@ void Game::InsertNewHighScore(std::string name)
 	}
 }
 
+//TODO: Implement loading score
 void Game::LoadLeaderboard()
 {
 	// CLEAR LEADERBOARD
@@ -542,6 +562,7 @@ void Game::LoadLeaderboard()
 	//CLOSE FILE
 }
 
+//TODO: Implement saving score
 void Game::SaveLeaderboard()
 {
 	// SAVE LEADERBOARD AS ARRAY
@@ -567,7 +588,7 @@ void Game::SaveLeaderboard()
 	// CLOSE FILE
 }
 
-
+//TODO: Use Raylib collision check instead - already exists.
 bool Game::CheckCollision(Vector2 circlePos, float circleRadius, Vector2 lineStart, Vector2 lineEnd)
 {
 	// our objective is to calculate the distance between the closest point on the line to the centre of the circle, 
@@ -586,7 +607,7 @@ bool Game::CheckCollision(Vector2 circlePos, float circleRadius, Vector2 lineSta
 
 	// calculate the length of the line
 	float length = lineLength(A, B);
-	
+
 	// calculate the dot product
 	float dotP = (((C.x - A.x) * (B.x - A.x)) + ((C.y - A.y) * (B.y - A.y))) / pow(length, 2);
 
@@ -633,16 +654,16 @@ bool Game::CheckCollision(Vector2 circlePos, float circleRadius, Vector2 lineSta
 
 }
 
-void Player::Initialize() 
+void Player::Initialize()
 {
-	
+
 	float window_width = (float)GetScreenWidth();
 	x_pos = window_width / 2;
-	std::cout<< "Find Player -X:" << GetScreenWidth() / 2 << "Find Player -Y" << GetScreenHeight() - player_base_height << std::endl;
+	std::cout << "Find Player -X:" << GetScreenWidth() / 2 << "Find Player -Y" << GetScreenHeight() - player_base_height << std::endl;
 
 }
 
-void Player::Update() 
+void Player::Update()
 {
 
 	//Movement
@@ -682,12 +703,12 @@ void Player::Update()
 		timer = 0;
 	}
 
-	
+
 }
 
-void Player::Render(Texture2D texture) 
+void Player::Render(Texture2D texture)
 {
-	float window_height = GetScreenHeight(); 
+	float window_height = GetScreenHeight();
 
 	DrawTexturePro(texture,
 		{
@@ -713,10 +734,10 @@ void Projectile::Update()
 
 	// UPDATE LINE POSITION
 	lineStart.y = position.y - 15;
-	lineEnd.y   = position.y + 15;
+	lineEnd.y = position.y + 15;
 
 	lineStart.x = position.x;
-	lineEnd.x   = position.x;
+	lineEnd.x = position.x;
 
 	if (position.y < 0 || position.y > 1500)
 	{
@@ -763,11 +784,11 @@ void Wall::Render(Texture2D texture)
 		WHITE);
 
 
-	DrawText(TextFormat("%i", health), position.x-21, position.y+10, 40, RED);
-	
+	DrawText(TextFormat("%i", health), position.x - 21, position.y + 10, 40, RED);
+
 }
 
-void Wall::Update() 
+void Wall::Update()
 {
 
 	// set walls as inactive when out of health
@@ -779,38 +800,38 @@ void Wall::Update()
 
 }
 
-void Alien::Update() 
+void Alien::Update()
 {
-	int window_width = GetScreenWidth(); 
+	int window_width = GetScreenWidth();
 
 	if (moveRight)
 	{
-		position.x += speed; 
+		position.x += speed;
 
 		if (position.x >= GetScreenWidth())
 		{
-			moveRight = false; 
-			position.y += 50; 
+			moveRight = false;
+			position.y += 50;
 		}
 	}
-	else 
+	else
 	{
-		position.x -= speed; 
+		position.x -= speed;
 
 		if (position.x <= 0)
 		{
-			moveRight = true; 
-			position.y += 50; 
+			moveRight = true;
+			position.y += 50;
 		}
 	}
 }
 
-void Alien::Render(Texture2D texture) 
+void Alien::Render(Texture2D texture)
 {
 	//DrawRectangle((int)position.x - 25, (int)position.y, 30, 30, RED);
 	//DrawCircle((int)position.x, (int)position.y, radius, GREEN);
-	
-	
+
+
 
 	DrawTexturePro(texture,
 		{
@@ -824,7 +845,7 @@ void Alien::Render(Texture2D texture)
 			position.y,
 			100,
 			100,
-		}, {50 , 50},
+		}, { 50 , 50 },
 		0,
 		WHITE);
 }
@@ -852,7 +873,7 @@ void Background::Initialize(int starAmount)
 
 		newStar.initPosition.x = GetRandomValue(-150, GetScreenWidth() + 150);
 		newStar.initPosition.y = GetRandomValue(0, GetScreenHeight());
-		
+
 		//random color?
 		newStar.color = SKYBLUE;
 
@@ -869,7 +890,7 @@ void Background::Update(float offset)
 	{
 		Stars[i].Update(offset);
 	}
-	
+
 }
 
 void Background::Render()

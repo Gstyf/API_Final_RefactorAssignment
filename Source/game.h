@@ -9,7 +9,7 @@
 #include <string>
 #include <stdexcept>
 
-
+// TODO: Clean Game.h Too many objects are handled here that could have their own headers.
 enum struct State
 {
 	STARTSCREEN,
@@ -131,14 +131,14 @@ struct Background
 
 struct Game
 {
-	explicit Game(State state)
+	explicit Game(State state) : gameState(state)
 	{
-		gameState = state;
 		InitWindow(1800, 900, "SPACE INVADER");
 		if (!IsWindowReady())
 		{
 			throw std::runtime_error("Failed to open game window!");
 		}
+		InitResources();
 	}
 	Game(const Game&) = delete;
 	Game(Game&&) = delete;
@@ -148,7 +148,6 @@ struct Game
 	{
 		CloseWindow();
 	}
-
 
 	// Gamestate
 	State gameState = {};
@@ -173,7 +172,7 @@ struct Game
 
 	bool newHighScore = false;
 
-
+	const void InitResources();
 	void Start();
 	void End();
 
@@ -194,7 +193,6 @@ struct Game
 	void LoadLeaderboard();
 	void SaveLeaderboard();
 
-
 	// Entity Storage and Resources
 	MyTexture alienTexture{ "./Assets/Alien.png" };
 	MyTexture barrierTexture{ "./Assets/Barrier.png" };
@@ -204,7 +202,6 @@ struct Game
 		MyTexture{"./Assets/Ship2.png"},
 		MyTexture{"./Assets/Ship3.png"},
 	};
-
 
 	Resources resources;
 
