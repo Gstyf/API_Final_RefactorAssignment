@@ -3,7 +3,7 @@
 #pragma warning(disable:ALL_CODE_ANALYSIS_WARNINGS)
 #include "raylib.h"
 #pragma warning(pop)
-#include "MyTexture.hpp"
+#include "MyTexture.h"
 #include "Resources.h"
 #include <array>
 #include <string>
@@ -193,15 +193,11 @@ struct Game
 	void LoadLeaderboard();
 	void SaveLeaderboard();
 
-	// Entity Storage and Resources
-	MyTexture alienTexture{ "./Assets/Alien.png" };
-	MyTexture barrierTexture{ "./Assets/Barrier.png" };
-	MyTexture laserTexture{ "./Assets/Laser.png" };
-	std::array<MyTexture, 3> shipTextures{
-		MyTexture{"./Assets/Ship1.png"},
-		MyTexture{"./Assets/Ship2.png"},
-		MyTexture{"./Assets/Ship3.png"},
-	};
+	//TODO: Move resources to their respective class? That way the game can initialize without worrying about the fucking things...
+	MyTexture alienTexture;
+	MyTexture barrierTexture;
+	MyTexture laserTexture;
+	std::array<MyTexture, 3> shipTextures;
 
 	Resources resources;
 
