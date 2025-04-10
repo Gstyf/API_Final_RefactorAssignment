@@ -2,7 +2,7 @@
 #pragma warning(disable:ALL_CODE_ANALYSIS_WARNINGS)
 #include "raylib.h"
 #pragma warning(pop)
-#include <string>
+#include <string_view>
 #include <format>
 #include <stdexcept>
 #include <print>

@@ -134,12 +134,21 @@ struct Game
 {
 	explicit Game(State state) : gameState(state) {}
 
+	// Window
+	MyWindow myWindow;
+
 	// Gamestate
 	State gameState = {};
 
-	// Window
-	MyWindow myWindow;
-	
+	//TODO: Move resources to their respective class?
+	MyTexture alienTexture{ "./Assets/Alien.png" };
+	MyTexture barrierTexture{ "./Assets/Barrier.png" };
+	MyTexture laserTexture{ "./Assets/Laser.png" };
+	std::array<MyTexture,3> shipTextures{
+		MyTexture{"./Assets/Ship1.png"},
+		MyTexture{"./Assets/Ship2.png"},
+		MyTexture{"./Assets/Ship3.png"},
+	};
 
 	// Score
 	int score;
@@ -161,6 +170,33 @@ struct Game
 
 	bool newHighScore = false;
 
+	//TODO: Move these classes and their definitions to their respective headers.
+	Player player;
+
+	std::vector<Projectile> Projectiles;
+
+	std::vector<Wall> Walls;
+
+	std::vector<Alien> Aliens;
+
+	std::vector<PlayerData> Leaderboard = { {"Player 1", 500}, {"Player 2", 400}, {"Player 3", 300}, {"Player 4", 200}, {"Player 5", 100} };
+
+	Background background;
+
+	Vector2 playerPos;
+	Vector2 alienPos;
+	Vector2 cornerPos;
+	float offset;
+
+	//TEXTBOX ENTER
+	char name[9 + 1] = "\0";      //One extra space required for null terminator char '\0'
+	int letterCount = 0;
+
+	Rectangle textBox = { 600, 500, 225, 50 };
+	bool mouseOnText = false;
+
+	int framesCounter = 0;
+
 	void Start();
 	void End();
 
@@ -180,45 +216,4 @@ struct Game
 
 	void LoadLeaderboard();
 	void SaveLeaderboard();
-
-	//TODO: Move resources to their respective class? That way the game can initialize without worrying about the fucking things...
-	MyTexture alienTexture{ "./Assets/Alien.png" };
-	MyTexture barrierTexture{ "./Assets/Barrier.png" };
-	MyTexture laserTexture{ "./Assets/Laser.png" };
-	std::array<MyTexture,3> shipTextures{
-		MyTexture{"./Assets/Ship1.png"},
-		MyTexture{"./Assets/Ship2.png"},
-		MyTexture{"./Assets/Ship3.png"},
-	};
-
-	Player player;
-
-	std::vector<Projectile> Projectiles;
-
-	std::vector<Wall> Walls;
-
-	std::vector<Alien> Aliens;
-
-	std::vector<PlayerData> Leaderboard = { {"Player 1", 500}, {"Player 2", 400}, {"Player 3", 300}, {"Player 4", 200}, {"Player 5", 100} };
-
-	Background background;
-
-
-
-	Vector2 playerPos;
-	Vector2 alienPos;
-	Vector2 cornerPos;
-	float offset;
-
-
-
-	//TEXTBOX ENTER
-	char name[9 + 1] = "\0";      //One extra space required for null terminator char '\0'
-	int letterCount = 0;
-
-	Rectangle textBox = { 600, 500, 225, 50 };
-	bool mouseOnText = false;
-
-	int framesCounter = 0;
-
 };
