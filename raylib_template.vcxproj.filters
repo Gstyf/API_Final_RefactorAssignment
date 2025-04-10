@@ -29,7 +29,10 @@
     <ClInclude Include="Constants.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\MyTexture.h">
+    <ClInclude Include="Source\MyTexture.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\MyWindow.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

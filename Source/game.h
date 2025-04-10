@@ -3,8 +3,10 @@
 #pragma warning(disable:ALL_CODE_ANALYSIS_WARNINGS)
 #include "raylib.h"
 #pragma warning(pop)
-#include "MyTexture.h"
+#include "MyTexture.hpp"
+#include "MyWindow.hpp"
 #include <array>
+#include <vector>
 #include <string>
 #include <stdexcept>
 
@@ -135,6 +137,10 @@ struct Game
 	// Gamestate
 	State gameState = {};
 
+	// Window
+	MyWindow myWindow;
+	
+
 	// Score
 	int score;
 
@@ -179,7 +185,7 @@ struct Game
 	MyTexture alienTexture{ "./Assets/Alien.png" };
 	MyTexture barrierTexture{ "./Assets/Barrier.png" };
 	MyTexture laserTexture{ "./Assets/Laser.png" };
-	std::array<MyTexture, 3> shipTextures{
+	std::array<MyTexture,3> shipTextures{
 		MyTexture{"./Assets/Ship1.png"},
 		MyTexture{"./Assets/Ship2.png"},
 		MyTexture{"./Assets/Ship3.png"},
