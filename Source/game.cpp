@@ -29,19 +29,6 @@ bool pointInCircle(Vector2 circlePos, float radius, Vector2 point) // Uses pytha
 	}
 }
 
-//
-//const void  Game::InitResources()
-//{
-//	//TODO: I hate this... but it loads now. Want to see if I can get the textures to load in the initialiser AFTER the window is open.
-//	// Entity Storage and Resources
-//	alienTexture.LoadMyTexture( "./Assets/small.png" );
-//	barrierTexture.LoadMyTexture("./Assets/Barrier.png");
-//	laserTexture.LoadMyTexture("./Assets/Laser.png");
-//	shipTextures[0].LoadMyTexture("./Assets/Ship1.png");
-//	shipTextures[1].LoadMyTexture("./Assets/Ship2.png");
-//	shipTextures[2].LoadMyTexture("./Assets/Ship3.png");
-//}
-
 void Game::Start()
 {
 	// creating walls 
@@ -94,12 +81,6 @@ void Game::Continue()
 	SaveLeaderboard();
 	gameState = State::STARTSCREEN;
 }
-
-//void Game::Launch()
-//{
-//	//LOAD SOME RESOURCES HERE
-//	resources.Load();
-//}
 
 //TODO: Refactor A LOT! Delegate updating to each affected object's own update function. Make new functions of the rest. (was 250 lines long!)
 void Game::Update()

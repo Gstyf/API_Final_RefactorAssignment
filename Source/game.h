@@ -4,7 +4,6 @@
 #include "raylib.h"
 #pragma warning(pop)
 #include "MyTexture.h"
-#include "Resources.h"
 #include <array>
 #include <string>
 #include <stdexcept>
@@ -156,7 +155,6 @@ struct Game
 
 	bool newHighScore = false;
 
-	//const void InitResources();
 	void Start();
 	void End();
 
@@ -186,8 +184,6 @@ struct Game
 		MyTexture{"./Assets/Ship2.png"},
 		MyTexture{"./Assets/Ship3.png"},
 	};
-
-	//Resources resources;
 
 	Player player;
 
