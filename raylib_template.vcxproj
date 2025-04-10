@@ -166,13 +166,11 @@
   <ItemGroup>
     <ClCompile Include="Source\game.cpp" />
     <ClCompile Include="Source\main.cpp" />
-    <ClCompile Include="Source\Resources.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Constants.hpp" />
     <ClInclude Include="Source\game.h" />
     <ClInclude Include="Source\MyTexture.h" />
-    <ClInclude Include="Source\Resources.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
