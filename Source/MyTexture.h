@@ -8,10 +8,16 @@
 #include <print>
 
 class MyTexture final {
-public:
 	Texture2D myTex = {};
-	//TODO: Move back the throw into the constructor! Can't be done if textures are in the same class as window because window needs to exist FIRST!
-	explicit MyTexture() noexcept = default;
+public:
+	explicit MyTexture(std::string_view path)
+	{
+		myTex = LoadTexture(path.data());
+		if (myTex.id <= 0)
+		{
+			throw std::runtime_error(std::format("Failed to load image at {}", path));
+		}
+	};
 	MyTexture(const MyTexture&) = delete;
 	MyTexture(MyTexture&&) = delete;
 	MyTexture& operator=(const MyTexture&) = delete;
@@ -19,15 +25,6 @@ public:
 	~MyTexture()
 	{
 		UnloadTexture(myTex);
-	}
-
-	void LoadMyTexture(std::string_view path)
-	{
-		myTex = LoadTexture(path.data());
-		if (myTex.id <= 0)
-		{
-			throw std::runtime_error(std::format("Failed to load image at {}", path));
-		}
 	}
 
 	Texture2D GetTexture() const noexcept

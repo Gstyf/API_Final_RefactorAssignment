@@ -36,14 +36,14 @@ int main(void)
 {    
     // Initialization
     //--------------------------------------------------------------------------------------
-
+    InitWindow(1800, 900, "SPACE INVADER");
+    if (!IsWindowReady())
+    {
+        throw std::runtime_error("Failed to open game window!");
+    }
     SetTargetFPS(60);               // Set our game to run at 60 frames-per-second
 
-    //TODO: Fix two-step init
     Game game { State::STARTSCREEN };
-    Resources resources;
-    game.resources = resources;
-    game.Launch();
     
     //--------------------------------------------------------------------------------------
 
@@ -64,6 +64,8 @@ int main(void)
         //----------------------------------------------------------------------------------
     }
     
+    // Deinitialization
+    CloseWindow();
     std::string filename = "level.txt";  
 
     return 0;

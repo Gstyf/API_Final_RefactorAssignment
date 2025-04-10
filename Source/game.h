@@ -131,23 +131,7 @@ struct Background
 
 struct Game
 {
-	explicit Game(State state) : gameState(state)
-	{
-		InitWindow(1800, 900, "SPACE INVADER");
-		if (!IsWindowReady())
-		{
-			throw std::runtime_error("Failed to open game window!");
-		}
-		InitResources();
-	}
-	Game(const Game&) = delete;
-	Game(Game&&) = delete;
-	Game& operator=(const Game&) = delete;
-	Game& operator=(Game&&) = delete;
-	~Game()
-	{
-		CloseWindow();
-	}
+	explicit Game(State state) : gameState(state) {}
 
 	// Gamestate
 	State gameState = {};
@@ -172,7 +156,7 @@ struct Game
 
 	bool newHighScore = false;
 
-	const void InitResources();
+	//const void InitResources();
 	void Start();
 	void End();
 
@@ -194,12 +178,16 @@ struct Game
 	void SaveLeaderboard();
 
 	//TODO: Move resources to their respective class? That way the game can initialize without worrying about the fucking things...
-	MyTexture alienTexture;
-	MyTexture barrierTexture;
-	MyTexture laserTexture;
-	std::array<MyTexture, 3> shipTextures;
+	MyTexture alienTexture{ "./Assets/Alien.png" };
+	MyTexture barrierTexture{ "./Assets/Barrier.png" };
+	MyTexture laserTexture{ "./Assets/Laser.png" };
+	std::array<MyTexture, 3> shipTextures{
+		MyTexture{"./Assets/Ship1.png"},
+		MyTexture{"./Assets/Ship2.png"},
+		MyTexture{"./Assets/Ship3.png"},
+	};
 
-	Resources resources;
+	//Resources resources;
 
 	Player player;
 
