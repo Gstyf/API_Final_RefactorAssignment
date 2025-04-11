@@ -350,7 +350,7 @@ void Game::Render()
 		DrawText(TextFormat("Lives: %i", player.lives), 50, 70, 40, YELLOW);
 
 		//player rendering 
-		player.Render(shipTextures[player.activeTexture].GetTexture());
+		player.Render(shipTextures[player.activeTexture]);
 
 		//TODO: Use range-fors instead
 		//projectile rendering
@@ -362,13 +362,13 @@ void Game::Render()
 		// wall rendering 
 		for (int i = 0; i < Walls.size(); i++)
 		{
-			Walls[i].Render(wallTexture.GetTexture());
+			Walls[i].Render(wallTexture);
 		}
 
 		//alien rendering  
 		for (int i = 0; i < Aliens.size(); i++)
 		{
-			Aliens[i].Render(alienTexture.GetTexture());
+			Aliens[i].Render(alienTexture);
 		}
 
 		break;
@@ -637,11 +637,11 @@ void Player::Update()
 	}
 }
 
-void Player::Render(Texture2D texture)
+void Player::Render(const MyTexture& texture)
 {
 	float window_height = GetScreenHeight();
-	DrawTexture(texture,
-		x_pos - texture.width / 2, window_height - texture.height, WHITE);
+	DrawTexture(texture.GetTexture(),
+		x_pos - texture.WidthHalf(), window_height - texture.Height(), WHITE);
 }
 
 
@@ -663,29 +663,17 @@ void Projectile::Update()
 	}
 }
 
-void Projectile::Render(MyTexture texture)
+void Projectile::Render(const MyTexture& texture)
 {
 	//DrawCircle((int)position.x, (int)position.y, 10, RED);
 	DrawTexture(texture.GetTexture(),
 		position.x - texture.WidthHalf(), position.y - texture.HeightHalf(), WHITE);
 }
 
-void Wall::Render(Texture2D texture)
+void Wall::Render(const MyTexture& texture)
 {
-	DrawTexturePro(texture,
-		{
-			0,
-			0,
-			704,
-			704,
-		},
-		{
-			position.x,
-			position.y,
-			200,
-			200,
-		}, { 100 , 100 },
-		0,
+	DrawTexture(texture.GetTexture(),
+		position.x - texture.WidthHalf(), position.y - texture.HeightHalf(),
 		WHITE);
 	DrawText(TextFormat("%i", health), position.x - 21, position.y + 10, 40, RED);
 }
@@ -725,23 +713,10 @@ void Alien::Update()
 	}
 }
 
-void Alien::Render(Texture2D texture)
+void Alien::Render(const MyTexture& texture)
 {
-	DrawTexturePro(texture,
-		{
-			0,
-			0,
-			352,
-			352,
-		},
-		{
-			position.x,
-			position.y,
-			100,
-			100,
-		}, { 50 , 50 },
-		0,
-		WHITE);
+	DrawTexture(texture.GetTexture(),
+		position.x - texture.WidthHalf(), position.y - texture.HeightHalf(), WHITE);
 }
 
 

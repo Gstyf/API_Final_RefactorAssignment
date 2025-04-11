@@ -48,7 +48,7 @@ public:
 	EntityType type = EntityType::PLAYER;
 
 	void Initialize();
-	void Render(Texture2D texture);
+	void Render(const MyTexture& texture);
 	void Update();
 
 };
@@ -69,7 +69,7 @@ public:
 
 	void Update();
 
-	void Render(MyTexture texture);
+	void Render(const MyTexture& texture);
 };
 
 struct Wall
@@ -82,15 +82,13 @@ public:
 	int health = 50;
 	int radius = 60;
 
-
-	void Render(Texture2D texture);
+	void Render(const MyTexture& texture);
 	void Update();
 };
 
 struct Alien
 {
 public:
-
 	Color color = WHITE;
 	Vector2 position = { 0, 0 };
 	int x = 0;
@@ -104,7 +102,7 @@ public:
 	int speed = 2;
 
 	void Update();
-	void Render(Texture2D texture);
+	void Render(const MyTexture& texture);
 };
 
 
@@ -120,14 +118,11 @@ struct Star
 
 struct Background
 {
-
-
 	std::vector<Star> Stars;
 
 	void Initialize(int starAmount);
 	void Update(float offset);
 	void Render();
-
 };
 
 struct Game

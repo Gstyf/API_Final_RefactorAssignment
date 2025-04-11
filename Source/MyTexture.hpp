@@ -18,8 +18,8 @@ public:
 			throw std::runtime_error(std::format("Failed to load image at {}", path));
 		}
 	};
-	MyTexture(const MyTexture&) = default;
-	MyTexture(MyTexture&&) = default;
+	MyTexture(const MyTexture&) = delete;
+	MyTexture(MyTexture&&) = delete;
 	MyTexture& operator=(const MyTexture&) = delete;
 	MyTexture& operator=(MyTexture&&) = delete;
 	~MyTexture()
