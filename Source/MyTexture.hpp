@@ -18,8 +18,8 @@ public:
 			throw std::runtime_error(std::format("Failed to load image at {}", path));
 		}
 	};
-	MyTexture(const MyTexture&) = delete;
-	MyTexture(MyTexture&&) = delete;
+	MyTexture(const MyTexture&) = default;
+	MyTexture(MyTexture&&) = default;
 	MyTexture& operator=(const MyTexture&) = delete;
 	MyTexture& operator=(MyTexture&&) = delete;
 	~MyTexture()
@@ -30,5 +30,25 @@ public:
 	Texture2D GetTexture() const noexcept
 	{
 		return myTex;
+	}
+
+	int Width() const noexcept
+	{
+		return myTex.width;
+	}
+
+	int WidthHalf() const noexcept
+	{
+		return myTex.width / 2;
+	}
+
+	int Height() const noexcept
+	{
+		return myTex.height;
+	}
+
+	int HeightHalf() const noexcept
+	{
+		return myTex.height / 2;
 	}
 };

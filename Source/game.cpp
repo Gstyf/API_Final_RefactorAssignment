@@ -356,7 +356,7 @@ void Game::Render()
 		//projectile rendering
 		for (int i = 0; i < Projectiles.size(); i++)
 		{
-			Projectiles[i].Render(laserTexture.GetTexture());
+			Projectiles[i].Render(laserTexture);
 		}
 
 		// wall rendering 
@@ -640,20 +640,8 @@ void Player::Update()
 void Player::Render(Texture2D texture)
 {
 	float window_height = GetScreenHeight();
-	DrawTexturePro(texture,
-		{
-			0,
-			0,
-			352,
-			352,
-		},
-		{
-			x_pos, window_height - player_base_height,
-			100,
-			100,
-		}, { 50, 50 },
-		0,
-		WHITE);
+	DrawTexture(texture,
+		x_pos - texture.width / 2, window_height - texture.height, WHITE);
 }
 
 
@@ -675,24 +663,11 @@ void Projectile::Update()
 	}
 }
 
-void Projectile::Render(Texture2D texture)
+void Projectile::Render(MyTexture texture)
 {
 	//DrawCircle((int)position.x, (int)position.y, 10, RED);
-	DrawTexturePro(texture,
-		{
-			0,
-			0,
-			176,
-			176,
-		},
-		{
-			position.x,
-			position.y,
-			50,
-			50,
-		}, { 25 , 25 },
-		0,
-		WHITE);
+	DrawTexture(texture.GetTexture(),
+		position.x - texture.WidthHalf(), position.y - texture.HeightHalf(), WHITE);
 }
 
 void Wall::Render(Texture2D texture)
