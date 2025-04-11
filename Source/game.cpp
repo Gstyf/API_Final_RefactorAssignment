@@ -44,7 +44,6 @@ void Game::Start()
 		Walls.push_back(newWalls);
 	}
 
-
 	//creating player
 	Player newPlayer;
 	player = newPlayer;
@@ -52,7 +51,6 @@ void Game::Start()
 
 	//creating aliens
 	SpawnAliens();
-
 
 	//creating background
 	Background newBackground;
@@ -63,7 +61,6 @@ void Game::Start()
 	score = 0;
 
 	gameState = State::GAMEPLAY;
-
 }
 
 void Game::End()
@@ -92,8 +89,6 @@ void Game::Update()
 		if (IsKeyReleased(KEY_SPACE))
 		{
 			Start();
-
-
 		}
 
 		break;
@@ -129,7 +124,6 @@ void Game::Update()
 		{
 			SpawnAliens();
 		}
-
 
 		// Update background with offset
 		playerPos = { player.x_pos, (float)player.player_base_height }; //TODO: Why is playerPos reassigned here?
@@ -182,7 +176,6 @@ void Game::Update()
 					}
 				}
 			}
-
 
 			for (int b = 0; b < Walls.size(); b++)
 			{
@@ -259,9 +252,6 @@ void Game::Update()
 			}
 		}
 
-
-
-
 		break;
 	case State::ENDSCREEN:
 		//Code
@@ -271,7 +261,6 @@ void Game::Update()
 		{
 			Continue();
 		}
-
 
 		//TODO: Refactor highscore screen into own function
 		if (newHighScore)
@@ -297,7 +286,6 @@ void Game::Update()
 						name[letterCount + 1] = '\0'; // Add null terminator at the end of the string.
 						letterCount++;
 					}
-
 					key = GetCharPressed();  // Check next character in the queue
 				}
 
@@ -330,11 +318,7 @@ void Game::Update()
 
 				newHighScore = false;
 			}
-
-
 		}
-
-
 
 		break;
 	default:
@@ -354,11 +338,9 @@ void Game::Render()
 
 		DrawText("PRESS SPACE TO BEGIN", 200, 350, 40, YELLOW);
 
-
 		break;
 	case State::GAMEPLAY:
 		//Code
-
 
 		//background render LEAVE THIS AT TOP
 		background.Render();
@@ -389,27 +371,14 @@ void Game::Render()
 			Aliens[i].Render(alienTexture.GetTexture());
 		}
 
-
-
-
-
-
 		break;
 	case State::ENDSCREEN:
 		//Code
 		//DrawText("END", 50, 50, 40, YELLOW);
 
-
-
-
-
-
-
 		if (newHighScore)
 		{
 			DrawText("NEW HIGHSCORE!", 600, 300, 60, YELLOW);
-
-
 
 			// BELOW CODE IS FOR NAME INPUT RENDER
 			DrawText("PLACE MOUSE OVER INPUT BOX!", 600, 400, 20, YELLOW);
@@ -440,22 +409,18 @@ void Game::Render()
 					{
 						DrawText("_", (int)textBox.x + 8 + MeasureText(name, 40), (int)textBox.y + 12, 40, MAROON);
 					}
-
 				}
 				else
 				{
 					//Name needs to be shorter
 					DrawText("Press BACKSPACE to delete chars...", 600, 650, 20, YELLOW);
 				}
-
 			}
-
 			// Explain how to continue when name is input
 			if (letterCount > 0 && letterCount < 9)
 			{
 				DrawText("PRESS ENTER TO CONTINUE", 600, 800, 40, YELLOW);
 			}
-
 		}
 		else {
 			// If no highscore or name is entered, show scoreboard and call it a day
@@ -470,10 +435,6 @@ void Game::Render()
 				DrawText(TextFormat("%i", Leaderboard[i].score), 350, 140 + (i * 40), 40, YELLOW);
 			}
 		}
-
-
-
-
 		break;
 	default:
 		//SHOULD NOT HAPPEN
@@ -494,7 +455,6 @@ void Game::SpawnAliens()
 			std::cout << "Find Alien -Y:" << newAlien.position.y << std::endl;
 		}
 	}
-
 }
 
 bool Game::CheckNewHighScore()
@@ -503,7 +463,6 @@ bool Game::CheckNewHighScore()
 	{
 		return true;
 	}
-
 	return false;
 }
 
@@ -631,21 +590,17 @@ bool Game::CheckCollision(Vector2 circlePos, float circleRadius, Vector2 lineSta
 		// Point is not on the line, line is not colliding
 		return false;
 	}
-
 }
 
 void Player::Initialize()
 {
-
 	float window_width = (float)GetScreenWidth();
 	x_pos = window_width / 2;
 	std::cout << "Find Player -X:" << GetScreenWidth() / 2 << "Find Player -Y" << GetScreenHeight() - player_base_height << std::endl;
-
 }
 
 void Player::Update()
 {
-
 	//Movement
 	direction = 0;
 	if (IsKeyDown(KEY_LEFT))
@@ -667,8 +622,6 @@ void Player::Update()
 	{
 		x_pos = GetScreenWidth() - radius;
 	}
-
-
 	//Determine frame for animation
 	timer += GetFrameTime();
 
@@ -682,14 +635,11 @@ void Player::Update()
 		activeTexture++;
 		timer = 0;
 	}
-
-
 }
 
 void Player::Render(Texture2D texture)
 {
 	float window_height = GetScreenHeight();
-
 	DrawTexturePro(texture,
 		{
 			0,
@@ -762,22 +712,16 @@ void Wall::Render(Texture2D texture)
 		}, { 100 , 100 },
 		0,
 		WHITE);
-
-
 	DrawText(TextFormat("%i", health), position.x - 21, position.y + 10, 40, RED);
-
 }
 
 void Wall::Update()
 {
-
 	// set walls as inactive when out of health
 	if (health < 1)
 	{
 		active = false;
 	}
-
-
 }
 
 void Alien::Update()
@@ -808,11 +752,6 @@ void Alien::Update()
 
 void Alien::Render(Texture2D texture)
 {
-	//DrawRectangle((int)position.x - 25, (int)position.y, 30, 30, RED);
-	//DrawCircle((int)position.x, (int)position.y, radius, GREEN);
-
-
-
 	DrawTexturePro(texture,
 		{
 			0,
@@ -836,7 +775,6 @@ void Star::Update(float starOffset)
 {
 	position.x = initPosition.x + starOffset;
 	position.y = initPosition.y;
-
 }
 
 void Star::Render()
@@ -860,7 +798,6 @@ void Background::Initialize(int starAmount)
 		newStar.size = GetRandomValue(1, 4) / 2;
 
 		Stars.push_back(newStar);
-
 	}
 }
 
@@ -870,7 +807,6 @@ void Background::Update(float offset)
 	{
 		Stars[i].Update(offset);
 	}
-
 }
 
 void Background::Render()
@@ -881,61 +817,4 @@ void Background::Render()
 	}
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*LEGACY CODE
-	// our objective is to calculate the distance between the closest point of the line to the centre of the circle,
-	// and determine if it is shorter than the radius.
-
-	// we can imagine the edges of the line and circle centre to form a triangle. calculating the height of the
-	// triangle will give us the distance, if the line serves as the base
-
-	// simplify variables
-	Vector2 A = lineStart;
-	Vector2 B = lineEnd;
-	Vector2 C = circlePos;
-
-	// calculate area using determinant method
-
-	float triangle_area = fabsf(A.x * (B.y - C.y) + B.x * (C.y - A.y) + C.x * (A.y - B.y)) / 2;
-
-
-	// Caculate vectors AB to calculate base length
-	Vector2 AB;
-	AB.x = B.x - A.x;
-	AB.y = B.y - A.y;
-
-	//get the base length
-	float trangle_base_length = (float)sqrt(pow(AB.x, 2) + pow(AB.y, 2));
-
-	// we double the area to turn in into a rectangle, and then divide the base length to get the height.
-	float triangle_height = (triangle_area * 2 ) / trangle_base_length;
-
-	std::cout << triangle_area << "\n";
-
-	if (triangle_height < circleRadius)
-	{
-		return true;
-	}
-	else
-	{
-		return false;
-	}
-
-
-	*/
 
