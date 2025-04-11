@@ -161,8 +161,8 @@ struct Game
 	int formationWidth = 8;
 	int formationHeight = 5;
 	int alienSpacing = 80;
-	int formationX = 100;
-	int formationY = 50;
+	float formationX = 100;
+	float formationY = 50;
 
 	bool newHighScore = false;
 
@@ -204,11 +204,9 @@ struct Game
 
 	void SpawnAliens();
 
-	bool CheckCollision(Vector2 circlePos, float circleRadius, Vector2 lineTop, Vector2 lineBottom);
-
 	bool CheckNewHighScore();
 
-	void InsertNewHighScore(std::string name);
+	void InsertNewHighScore(std::string& name);
 
 	void LoadLeaderboard();
 	void SaveLeaderboard();

@@ -5,30 +5,6 @@
 #include <thread>
 #include <vector>
 
-
-// MATH FUNCTIONS
-float lineLength(Vector2 A, Vector2 B) //Uses pythagoras to calculate the length of a line
-{
-	float length = sqrtf(pow(B.x - A.x, 2) + pow(B.y - A.y, 2));
-
-	return length;
-}
-
-//TODO: Use raylib function instead
-bool pointInCircle(Vector2 circlePos, float radius, Vector2 point) // Uses pythagoras to calculate if a point is within a circle or not
-{
-	float distanceToCentre = lineLength(circlePos, point);
-
-	if (distanceToCentre < radius)
-	{
-		return true;
-	}
-	else
-	{
-		return false;
-	}
-}
-
 void Game::Start()
 {
 	// creating walls 
@@ -128,7 +104,7 @@ void Game::Update()
 		// Update background with offset
 		playerPos = { player.x_pos, (float)player.player_base_height }; //TODO: Why is playerPos reassigned here?
 		cornerPos = { 0, (float)player.player_base_height };
-		offset = lineLength(playerPos, cornerPos) * -1;
+		offset = 2; //lineLength(playerPos, cornerPos) * -1;
 		background.Update(offset / 15);//TODO: Magic number
 
 
@@ -142,7 +118,6 @@ void Game::Update()
 		{
 			Walls[i].Update();
 		}
-
 		//TODO: refactor collision check into own function
 		//CHECK ALL COLLISONS HERE
 		for (int i = 0; i < Projectiles.size(); i++)
@@ -151,7 +126,19 @@ void Game::Update()
 			{
 				for (int a = 0; a < Aliens.size(); a++)
 				{
-					if (CheckCollision(Aliens[a].position, Aliens[a].radius, Projectiles[i].lineStart, Projectiles[i].lineEnd))
+					if (CheckCollisionRecs(
+						{
+							Aliens[a].position.x - alienTexture.WidthHalff(),
+							Aliens[a].position.y - alienTexture.HeightHalff(),
+							alienTexture.Widthf(), alienTexture.Heightf()
+						},
+						{
+							Projectiles[i].position.x - laserTexture.WidthHalff(),
+							Projectiles[i].position.y - laserTexture.HeightHalff(),
+							laserTexture.Widthf(), laserTexture.Heightf()
+						}))
+
+						//CheckCollision(Aliens[a].position, Aliens[a].radius, Projectiles[i].lineStart, Projectiles[i].lineEnd))
 					{
 						// Kill!
 						std::cout << "Hit! \n";
@@ -164,14 +151,26 @@ void Game::Update()
 			}
 
 			//ENEMY PROJECTILES HERE
-			for (int i = 0; i < Projectiles.size(); i++)
+			for (int p = 0; p < Projectiles.size(); p++)
 			{
-				if (Projectiles[i].type == EntityType::ENEMY_PROJECTILE)
+				if (Projectiles[p].type == EntityType::ENEMY_PROJECTILE)
 				{
-					if (CheckCollision({ player.x_pos, GetScreenHeight() - player.player_base_height }, player.radius, Projectiles[i].lineStart, Projectiles[i].lineEnd))
+					if (CheckCollisionRecs(
+						{
+							player.x_pos - shipTextures[player.activeTexture].WidthHalff(),
+							GetScreenHeight() - shipTextures[player.activeTexture].Heightf(),
+							shipTextures[player.activeTexture].Widthf(), shipTextures[player.activeTexture].Heightf()
+						},
+						{
+							Projectiles[p].position.x - laserTexture.WidthHalff(),
+							Projectiles[p].position.y - laserTexture.HeightHalff(),
+							laserTexture.Widthf(), laserTexture.Heightf()
+						})
+						//CheckCollision({ player.x_pos, GetScreenHeight() - player.player_base_height }, player.radius, Projectiles[i].lineStart, Projectiles[i].lineEnd)
+						)
 					{
 						std::cout << "dead!\n";
-						Projectiles[i].active = false;
+						Projectiles[p].active = false;
 						player.lives -= 1;
 					}
 				}
@@ -179,7 +178,20 @@ void Game::Update()
 
 			for (int b = 0; b < Walls.size(); b++)
 			{
-				if (CheckCollision(Walls[b].position, Walls[b].radius, Projectiles[i].lineStart, Projectiles[i].lineEnd))
+				if (CheckCollisionRecs(
+					{
+						Walls[b].position.x - wallTexture.WidthHalff(),
+						Walls[b].position.y - wallTexture.HeightHalff(),
+						wallTexture.Widthf(), wallTexture.Heightf()
+					},
+						{
+							Projectiles[i].position.x - laserTexture.WidthHalff(),
+							Projectiles[i].position.y - laserTexture.HeightHalff(),
+							laserTexture.Widthf(), laserTexture.Heightf()
+						})
+
+					//CheckCollision(Walls[b].position, Walls[b].radius, Projectiles[i].lineStart, Projectiles[i].lineEnd)
+					)
 				{
 					// Kill!
 					std::cout << "Hit! \n";
@@ -466,10 +478,10 @@ bool Game::CheckNewHighScore()
 	return false;
 }
 
-void Game::InsertNewHighScore(std::string name)
+void Game::InsertNewHighScore(std::string& tName)
 {
 	PlayerData newData;
-	newData.name = name;
+	newData.name = tName;
 	newData.score = score;
 
 	for (int i = 0; i < Leaderboard.size(); i++)
@@ -481,7 +493,7 @@ void Game::InsertNewHighScore(std::string name)
 
 			Leaderboard.pop_back();
 
-			i = Leaderboard.size();
+			i = static_cast<int>(Leaderboard.size());
 
 		}
 	}
@@ -525,71 +537,6 @@ void Game::SaveLeaderboard()
 	// WRITE ARRAY DATA INTO FILE
 
 	// CLOSE FILE
-}
-
-//TODO: Use Raylib collision check instead - already exists.
-bool Game::CheckCollision(Vector2 circlePos, float circleRadius, Vector2 lineStart, Vector2 lineEnd)
-{
-	// our objective is to calculate the distance between the closest point on the line to the centre of the circle, 
-	// and determine if it is shorter than the radius.
-
-	// check if either edge of line is within circle
-	if (pointInCircle(circlePos, circleRadius, lineStart) || pointInCircle(circlePos, circleRadius, lineEnd))
-	{
-		return true;
-	}
-
-	// simplify variables
-	Vector2 A = lineStart;
-	Vector2 B = lineEnd;
-	Vector2 C = circlePos;
-
-	// calculate the length of the line
-	float length = lineLength(A, B);
-
-	// calculate the dot product
-	float dotP = (((C.x - A.x) * (B.x - A.x)) + ((C.y - A.y) * (B.y - A.y))) / pow(length, 2);
-
-	// use dot product to find closest point
-	float closestX = A.x + (dotP * (B.x - A.x));
-	float closestY = A.y + (dotP * (B.y - A.y));
-
-	//find out if coordinates are on the line.
-	// we do this by comparing the distance of the dot to the edges, with two vectors
-	// if the distance of the vectors combined is the same as the length the point is on the line
-
-	//since we are using floating points, we will allow the distance to be slightly innaccurate to create a smoother collision
-	float buffer = 0.1;
-
-	float closeToStart = lineLength(A, { closestX, closestY }); //closestX + Y compared to line Start
-	float closeToEnd = lineLength(B, { closestX, closestY });	//closestX + Y compared to line End
-
-	float closestLength = closeToStart + closeToEnd;
-
-	if (closestLength == length + buffer || closestLength == length - buffer)
-	{
-		//Point is on the line!
-
-		//Compare length between closest point and circle centre with circle radius
-
-		float closeToCentre = lineLength(A, { closestX, closestY }); //closestX + Y compared to circle centre
-
-		if (closeToCentre < circleRadius)
-		{
-			//Line is colliding with circle!
-			return true;
-		}
-		else
-		{
-			//Line is not colliding
-			return false;
-		}
-	}
-	else
-	{
-		// Point is not on the line, line is not colliding
-		return false;
-	}
 }
 
 void Player::Initialize()
@@ -639,12 +586,10 @@ void Player::Update()
 
 void Player::Render(const MyTexture& texture)
 {
-	float window_height = GetScreenHeight();
+	//float window_height = GetScreenHeight();
 	DrawTexture(texture.GetTexture(),
-		x_pos - texture.WidthHalf(), window_height - texture.Height(), WHITE);
+		static_cast<int>(x_pos) - texture.WidthHalf(), GetScreenHeight() - texture.Height(), WHITE);
 }
-
-
 
 void Projectile::Update()
 {
@@ -667,15 +612,18 @@ void Projectile::Render(const MyTexture& texture)
 {
 	//DrawCircle((int)position.x, (int)position.y, 10, RED);
 	DrawTexture(texture.GetTexture(),
-		position.x - texture.WidthHalf(), position.y - texture.HeightHalf(), WHITE);
+		static_cast<int>(position.x) - texture.WidthHalf(),
+		static_cast<int>(position.y) - texture.HeightHalf(), WHITE);
 }
 
 void Wall::Render(const MyTexture& texture)
 {
 	DrawTexture(texture.GetTexture(),
-		position.x - texture.WidthHalf(), position.y - texture.HeightHalf(),
+		static_cast<int>(position.x) - texture.WidthHalf(),
+		static_cast<int>(position.y) - texture.HeightHalf(),
 		WHITE);
-	DrawText(TextFormat("%i", health), position.x - 21, position.y + 10, 40, RED);
+	DrawText(TextFormat("%i", health), static_cast<int>(position.x) - 21,
+		static_cast<int>(position.y) + 10, 40, RED);
 }
 
 void Wall::Update()
@@ -689,7 +637,7 @@ void Wall::Update()
 
 void Alien::Update()
 {
-	int window_width = GetScreenWidth();
+	//int window_width = GetScreenWidth();
 
 	if (moveRight)
 	{
@@ -716,7 +664,8 @@ void Alien::Update()
 void Alien::Render(const MyTexture& texture)
 {
 	DrawTexture(texture.GetTexture(),
-		position.x - texture.WidthHalf(), position.y - texture.HeightHalf(), WHITE);
+		static_cast<int>(position.x) - texture.WidthHalf(),
+		static_cast<int>(position.y) - texture.HeightHalf(), WHITE);
 }
 
 
@@ -739,13 +688,13 @@ void Background::Initialize(int starAmount)
 	{
 		Star newStar;
 
-		newStar.initPosition.x = GetRandomValue(-150, GetScreenWidth() + 150);
-		newStar.initPosition.y = GetRandomValue(0, GetScreenHeight());
+		newStar.initPosition.x = static_cast<float>(GetRandomValue(-150, GetScreenWidth() + 150));
+		newStar.initPosition.y = static_cast<float>(GetRandomValue(0, GetScreenHeight()));
 
 		//random color?
 		newStar.color = SKYBLUE;
 
-		newStar.size = GetRandomValue(1, 4) / 2;
+		newStar.size = static_cast<float>(GetRandomValue(1, 4) / 2);
 
 		Stars.push_back(newStar);
 	}

@@ -39,9 +39,19 @@ public:
 		return myTex.width;
 	}
 
+	float Widthf() const noexcept
+	{
+		return static_cast<float>(myTex.width);
+	}
+
 	int WidthHalf() const noexcept
 	{
 		return myTex.width / 2;
+	}
+
+	float WidthHalff() const noexcept
+	{
+		return static_cast<float>(myTex.width / 2);
 	}
 
 	int Height() const noexcept
@@ -49,8 +59,18 @@ public:
 		return myTex.height;
 	}
 
+	float Heightf() const noexcept
+	{
+		return static_cast<float>(myTex.height);
+	}
+
 	int HeightHalf() const noexcept
 	{
 		return myTex.height / 2;
+	}
+
+	float HeightHalff() const noexcept
+	{
+		return static_cast<float>(myTex.height / 2);
 	}
 };
