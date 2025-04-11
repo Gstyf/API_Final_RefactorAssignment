@@ -21,8 +21,9 @@
 *
 ********************************************************************************************/
 
+#include <codeanalysis\warnings.h>
 #pragma warning(push)
-#pragma warning(disable:ALL_CODE_ANALYSIS_WARNINGS)
+#pragma warning(disable:ALL_CODE_ANALYSIS_WARNINGS )
 #include "raylib.h"
 #pragma warning(pop)
 #include "game.hpp"
@@ -36,18 +37,23 @@ int main(void)
     // Initialization
     //--------------------------------------------------------------------------------------
 
+    //TODO: must wrap in try/catch. don't let exceptions escape. 
+
     Game game { State::STARTSCREEN };
     
     //--------------------------------------------------------------------------------------
 
     //TODO: State machine for update and render loop (main menu/game/credit screen)
     // Main game loop
+
+    //TODO: Consider windowshouldclose in game instead
     while (!WindowShouldClose())    // Detect window close button or ESC key
     {
         game.Update();
       
         // Draw
         //----------------------------------------------------------------------------------
+        //TODO: put begin draw in game.render
         BeginDrawing();
         ClearBackground(BLACK);
 

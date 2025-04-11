@@ -1,4 +1,5 @@
 #pragma once
+#include <codeanalysis\warnings.h>
 #pragma warning(push)
 #pragma warning(disable:ALL_CODE_ANALYSIS_WARNINGS)
 #include "raylib.h"
@@ -89,11 +90,11 @@ public:
 struct Alien
 {
 public:
-	Color color = WHITE;
-	Vector2 position = { 0, 0 };
+	static constexpr Color color = WHITE; // IF THEY DON'T CHANGE, THEY CAN BE CONSTEXPR, but why do they need to store color?
+	Vector2 position = { 0, 0 }; //Why do we have position twice?!
 	int x = 0;
 	int y = 0;
-	float radius = 30;
+	static constexpr float radius = 30;
 	bool active = true;
 	bool moveRight = true;
 
@@ -168,7 +169,7 @@ struct Game
 	//TODO: Move these classes and their definitions to their respective headers.
 	Player player;
 
-	std::vector<Projectile> Projectiles;
+	std::vector<Projectile> Projectiles; //TODO: keep different lists for player projectiles an dalien projectiles. They are the same type but serve different purposes. 
 
 	std::vector<Wall> Walls;
 
