@@ -142,7 +142,7 @@ struct Game
 
 	//TODO: Move resources to their respective class?
 	MyTexture alienTexture{ "./Assets/Alien.png" };
-	MyTexture barrierTexture{ "./Assets/Barrier.png" };
+	MyTexture wallTexture{ "./Assets/Wall.png" };
 	MyTexture laserTexture{ "./Assets/Laser.png" };
 	std::array<MyTexture,3> shipTextures{
 		MyTexture{"./Assets/Ship1.png"},

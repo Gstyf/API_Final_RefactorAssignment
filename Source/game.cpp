@@ -362,7 +362,7 @@ void Game::Render()
 		// wall rendering 
 		for (int i = 0; i < Walls.size(); i++)
 		{
-			Walls[i].Render(barrierTexture.GetTexture());
+			Walls[i].Render(wallTexture.GetTexture());
 		}
 
 		//alien rendering  
