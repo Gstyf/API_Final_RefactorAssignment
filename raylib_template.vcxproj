@@ -172,10 +172,14 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Constants.hpp" />
+    <ClInclude Include="Source\Alien.hpp" />
     <ClInclude Include="Source\Constants.hpp" />
     <ClInclude Include="Source\game.hpp" />
     <ClInclude Include="Source\MyTexture.hpp" />
     <ClInclude Include="Source\MyWindow.hpp" />
+    <ClInclude Include="Source\Player.hpp" />
+    <ClInclude Include="Source\Projectile.hpp" />
+    <ClInclude Include="Source\Wall.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

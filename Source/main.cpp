@@ -27,45 +27,47 @@
 #include "raylib.h"
 #pragma warning(pop)
 #include "game.hpp"
+#include <iostream>
+#include <stdexcept>
 
 
 //------------------------------------------------------------------------------------
 // Program main entry point
 //------------------------------------------------------------------------------------
 int main(void)
-{    
-    // Initialization
-    //--------------------------------------------------------------------------------------
+{
+	try {
+		// Initialization
+		Game game{ State::STARTSCREEN };
 
-    //TODO: must wrap in try/catch. don't let exceptions escape. 
+		//TODO: Consider windowshouldclose in game instead
+		while (!WindowShouldClose())    // Detect window close button or ESC key
+		{
+			// Main game loop
+			game.Update();
 
-    Game game { State::STARTSCREEN };
-    
-    //--------------------------------------------------------------------------------------
+			// Draw
+			//----------------------------------------------------------------------------------
+			//TODO: put begin draw in game.render
+			BeginDrawing();
+			ClearBackground(BLACK);
 
-    //TODO: State machine for update and render loop (main menu/game/credit screen)
-    // Main game loop
+			game.Render();
 
-    //TODO: Consider windowshouldclose in game instead
-    while (!WindowShouldClose())    // Detect window close button or ESC key
-    {
-        game.Update();
-      
-        // Draw
-        //----------------------------------------------------------------------------------
-        //TODO: put begin draw in game.render
-        BeginDrawing();
-        ClearBackground(BLACK);
+			EndDrawing();
+			//----------------------------------------------------------------------------------
+		}
+	}
+	catch (const std::runtime_error& e) {
+		std::cerr << e.what() << std::endl;
+	}
+	catch (const std::exception& e) {
+		std::cerr << "Exception: " << e.what() << std::endl;
+	}
+	catch (...) {
+		std::cerr << "Unknown exception" << std::endl;
+	}
 
-        game.Render();
-
-        EndDrawing();
-        //----------------------------------------------------------------------------------
-    }
-    
-    // Deinitialization
-
-    std::string filename = "level.txt";  
-
-    return 0;
+	// Deinitialization handled by destructors
+	return 0;
 }
