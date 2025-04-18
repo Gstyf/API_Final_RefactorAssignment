@@ -44,7 +44,6 @@ void Game::End()
 
 void Game::Continue()
 {
-	SaveLeaderboard();
 	gameState = State::STARTSCREEN;
 }
 
@@ -524,47 +523,6 @@ void Game::InsertNewHighScore(std::string& tName)
 		}
 	}
 }
-
-//TODO: Implement loading score
-void Game::LoadLeaderboard()
-{
-	// CLEAR LEADERBOARD
-
-	// OPEN FILE
-
-	// READ DATA
-
-	// WRITE DATA ONTO LEADERBOARD
-
-	//CLOSE FILE
-}
-
-//TODO: Implement saving score
-void Game::SaveLeaderboard()
-{
-	// SAVE LEADERBOARD AS ARRAY
-
-	// OPEN FILE
-	std::fstream file;
-
-	file.open("Leaderboard");
-
-	if (!file)
-	{
-		std::cout << "file not found \n";
-
-	}
-	else
-	{
-		std::cout << "file found \n";
-	}
-	// CLEAR FILE
-
-	// WRITE ARRAY DATA INTO FILE
-
-	// CLOSE FILE
-}
-
 
 //BACKGROUND
 void Star::Update(float starOffset)
