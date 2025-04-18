@@ -55,6 +55,16 @@ void Game::Continue()
 	gameState = State::STARTSCREEN;
 }
 
+void Game::Run()
+{
+	while (!WindowShouldClose())    // Detect window close button or ESC key
+	{
+		// Main game loop
+		Update();
+		Render();
+	}
+}
+
 //TODO: Refactor A LOT! Delegate updating to each affected object's own update function. Make new functions of the rest. (was 250 lines long!)
 void Game::Update()
 {

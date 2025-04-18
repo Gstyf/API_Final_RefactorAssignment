@@ -39,14 +39,8 @@ int main(void)
 	try {
 		// Initialization
 		Game game{ State::STARTSCREEN };
-
-		//TODO: Consider WindowShouldClose in game instead
-		while (!WindowShouldClose())    // Detect window close button or ESC key
-		{
-			// Main game loop
-			game.Update();
-			game.Render();
-		}
+		// Gameloop
+		game.Run();
 	}
 	catch (const std::runtime_error& e) {
 		std::cerr << e.what() << std::endl;

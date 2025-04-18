@@ -197,8 +197,8 @@ struct Game
 	void End();
 
 	void Continue();
-	void Launch();
 
+	void Run();
 	void Update();
 	void Render();
 
