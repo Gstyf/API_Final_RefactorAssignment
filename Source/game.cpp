@@ -12,18 +12,12 @@ void Game::Start()
 	const float wall_distance = window_width / (wallCount + 1);
 	for (int i = 0; i < wallCount; i++)
 	{
-		const Wall newWalls({wall_distance * (i + 1), static_cast<float>(GetScreenHeight() - 250)});
+		const Wall newWalls({ wall_distance * (i + 1), static_cast<float>(GetScreenHeight() - 250) });
 		Walls.push_back(newWalls);
 	}
 
 	//creating aliens
 	SpawnAliens();
-
-	//TODO: Remove background class, make a normal texture instead!
-	//creating background
-	Background newBackground;
-	newBackground.Initialize(600);
-	background = newBackground;
 
 	//reset score
 	score = 0;
@@ -114,8 +108,7 @@ void Game::GamePlayLogic()
 	}
 
 	// Update background with offset
-	offset = player.x_pos; //lineLength(playerPos, cornerPos) * -1;
-	background.Update(offset / 15);//TODO: Magic number
+	background.Update( static_cast<int>(player.x_pos) - (GetScreenWidth() / 2) );//TODO: Magic number
 
 	for (Wall& w : Walls)
 	{
@@ -380,8 +373,7 @@ void Game::Render()
 void Game::GamePlayDraw()
 {
 	//background render LEAVE THIS AT TOP
-	background.Render();
-
+	background.Render(bgTexture);
 	DrawText(TextFormat("Score: %i", score), 50, 20, 40, YELLOW);
 	DrawText(TextFormat("Lives: %i", player.lives), 50, 70, 40, YELLOW);
 
@@ -479,7 +471,7 @@ void Game::Shoot()
 {
 	if (IsKeyPressed(KEY_SPACE))
 	{
-		const Projectile newProjectile({player.x_pos, static_cast<float>(GetScreenHeight())}, playerProjectileSpeed);
+		const Projectile newProjectile({ player.x_pos, static_cast<float>(GetScreenHeight()) }, playerProjectileSpeed);
 		playerProjectiles.push_back(newProjectile);
 	}
 }
@@ -525,50 +517,15 @@ void Game::InsertNewHighScore(std::string& tName)
 }
 
 //BACKGROUND
-void Star::Update(float starOffset)
+void Background::Update(int offs) noexcept
 {
-	position.x = initPosition.x + starOffset;
-	position.y = initPosition.y;
+	bgOffset = offs / 10;
 }
 
-void Star::Render()
+void Background::Render(const MyTexture& texture) const noexcept
 {
-	DrawCircle((int)position.x, (int)position.y, size, color);
-}
-
-
-void Background::Initialize(int starAmount)
-{
-	for (int i = 0; i < starAmount; i++)
-	{
-		Star newStar;
-
-		newStar.initPosition.x = static_cast<float>(GetRandomValue(-150, GetScreenWidth() + 150));
-		newStar.initPosition.y = static_cast<float>(GetRandomValue(0, GetScreenHeight()));
-
-		//random color?
-		newStar.color = SKYBLUE;
-
-		newStar.size = static_cast<float>(GetRandomValue(1, 4) / 2);
-
-		Stars.push_back(newStar);
-	}
-}
-
-void Background::Update(float offset)
-{
-	for (int i = 0; i < Stars.size(); i++)
-	{
-		Stars[i].Update(offset);
-	}
-}
-
-void Background::Render()
-{
-	for (int i = 0; i < Stars.size(); i++)
-	{
-		Stars[i].Render();
-	}
+	DrawTexture(texture.GetTexture(), (GetScreenWidth() / 2) - texture.WidthHalf() - 
+		bgOffset, 0, WHITE);
 }
 
 
