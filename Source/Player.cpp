@@ -1,6 +1,6 @@
 #include "Player.hpp"
 
-void Player::Update()
+void Player::Update() noexcept
 {
 	//Movement
 	direction = 0;
@@ -38,7 +38,7 @@ void Player::Update()
 	}
 }
 
-void Player::Render(const MyTexture& texture)
+void Player::Render(const MyTexture& texture) const noexcept
 {
 	//float window_height = GetScreenHeight();
 	DrawTexture(texture.GetTexture(),

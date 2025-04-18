@@ -1,6 +1,6 @@
 #include "Projectile.hpp"
 
-void Projectile::Update()
+void Projectile::Update() noexcept
 {
 	position.y -= speed;
 
@@ -10,7 +10,7 @@ void Projectile::Update()
 	}
 }
 
-void Projectile::Render(const MyTexture& texture)
+void Projectile::Render(const MyTexture& texture) const noexcept
 {
 	//DrawCircle((int)position.x, (int)position.y, 10, RED);
 	DrawTexture(texture.GetTexture(),

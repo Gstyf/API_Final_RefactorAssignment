@@ -19,6 +19,6 @@ public:
 
 	int speed = 2;
 
-	void Update();
+	void Update() noexcept;
 	void Render(const MyTexture& texture) const noexcept;
 };

@@ -9,7 +9,7 @@
 #include <stdexcept>
 #include <print>
 
-class MyTexture final {
+class MyTexture {
 	Texture2D myTex = {};
 public:
 	explicit MyTexture(std::string_view path)

@@ -1,6 +1,6 @@
 #include "Alien.hpp"
 
-void Alien::Update()
+void Alien::Update() noexcept
 {
 	if (moveRight)
 	{

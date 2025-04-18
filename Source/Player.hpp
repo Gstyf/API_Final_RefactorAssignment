@@ -23,6 +23,6 @@ public:
 	Vector2 sizeOffset = { 0,0 };
 	Rectangle aabb = { 0,0,0,0 };
 
-	void Render(const MyTexture& texture);
-	void Update();
+	void Update() noexcept;
+	void Render(const MyTexture& texture) const noexcept;
 };

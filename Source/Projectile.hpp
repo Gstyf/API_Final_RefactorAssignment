@@ -16,7 +16,6 @@ public:
 	int speed = 0;
 	bool active = true;
 
-	void Update();
-
-	void Render(const MyTexture& texture);
+	void Update() noexcept;
+	void Render(const MyTexture& texture) const noexcept;
 };

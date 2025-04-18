@@ -8,7 +8,7 @@
 void Game::Start()
 {
 	// creating walls 
-	const float window_width = static_cast<float>(GetScreenWidth());
+	const auto window_width = static_cast<float>(GetScreenWidth());
 	const float wall_distance = window_width / (wallCount + 1);
 	for (int i = 0; i < wallCount; i++)
 	{

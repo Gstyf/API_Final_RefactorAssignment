@@ -17,6 +17,6 @@ public:
 	int health = 50;
 	int radius = 60;
 
-	void Render(const MyTexture& texture);
-	void Update();
+	void Update() noexcept;
+	void Render(const MyTexture& texture) const noexcept;
 };

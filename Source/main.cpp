@@ -27,7 +27,8 @@
 #include "raylib.h"
 #pragma warning(pop)
 #include "game.hpp"
-#include <iostream>
+#include <print>
+#include <format>
 #include <stdexcept>
 
 
@@ -44,13 +45,13 @@ int main(void)
 		game.Run();
 	}
 	catch (const std::runtime_error& e) {
-		std::cerr << e.what() << std::endl;
+		std::print("\nRuntime Error: {}\n", e.what());
 	}
 	catch (const std::exception& e) {
-		std::cerr << "Exception: " << e.what() << std::endl;
+		std::print("\nException: {}\n", e.what());
 	}
 	catch (...) {
-		std::cerr << "Unknown exception" << std::endl;
+		std::print("\nUnknown exception. I have no idea what broke.\n");
 	}
 
 	// Deinitialization handled by destructors

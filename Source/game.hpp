@@ -40,6 +40,7 @@ struct Star
 	void Render();
 };
 
+//TODO: Remove background class, just have it be a texture.
 struct Background
 {
 	std::vector<Star> Stars;
