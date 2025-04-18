@@ -6,13 +6,14 @@
 #pragma warning(pop)
 #include "MyTexture.hpp"
 
+//TODO: Move fields to private, use setters and getters
 class Projectile
 {
 public:
 	Projectile(Vector2 spawnPos, int direction) noexcept : position(spawnPos), speed(direction) {}
 
 	Vector2 position = { 0,0 };
-	int speed = 15;
+	int speed = 0;
 	bool active = true;
 
 	void Update();

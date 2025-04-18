@@ -19,6 +19,7 @@ void Game::Start()
 	//creating aliens
 	SpawnAliens();
 
+	//TODO: Remove background class, make a normal texture instead!
 	//creating background
 	Background newBackground;
 	newBackground.Initialize(600);
@@ -232,7 +233,7 @@ void Game::Update()
 				randomAlienIndex = rand() % Aliens.size();
 			}
 
-			const Projectile newProjectile({Aliens[randomAlienIndex].position}, -15);
+			const Projectile newProjectile({Aliens[randomAlienIndex].position}, enemyProjectileSpeed);
 			enemyProjectiles.push_back(newProjectile);
 			shootTimer = 0;
 		}
@@ -479,7 +480,7 @@ void Game::Shoot()
 {
 	if (IsKeyPressed(KEY_SPACE))
 	{
-		const Projectile newProjectile({player.x_pos, static_cast<float>(GetScreenHeight())}, 15);
+		const Projectile newProjectile({player.x_pos, static_cast<float>(GetScreenHeight())}, playerProjectileSpeed);
 		playerProjectiles.push_back(newProjectile);
 	}
 }
@@ -488,13 +489,8 @@ void Game::SpawnAliens()
 {
 	for (int row = 0; row < formationHeight; row++) {
 		for (int col = 0; col < formationWidth; col++) {
-			Alien newAlien = Alien();
-			newAlien.active = true;
-			newAlien.position.x = formationX + 450 + (col * alienSpacing);
-			newAlien.position.y = formationY + (row * alienSpacing);
+			const Alien newAlien({ formationX + 450 + (col * alienSpacing) , formationY + (row * alienSpacing) });
 			Aliens.push_back(newAlien);
-			std::cout << "Find Alien -X:" << newAlien.position.x << std::endl;
-			std::cout << "Find Alien -Y:" << newAlien.position.y << std::endl;
 		}
 	}
 }

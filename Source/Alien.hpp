@@ -6,21 +6,19 @@
 #pragma warning(pop)
 #include "MyTexture.hpp"
 
+//TODO: Move fields to private, use setters and getters
 class Alien
 {
 public:
-	static constexpr Color color = WHITE; // IF THEY DON'T CHANGE, THEY CAN BE CONSTEXPR, but why do they need to store color?
-	Vector2 position = { 0, 0 }; //Why do we have position twice?!
-	int x = 0;
-	int y = 0;
+	explicit Alien(Vector2 spawnPos) noexcept : position(spawnPos) {}
+	
+	Vector2 position = { 0, 0 };
 	static constexpr float radius = 30;
 	bool active = true;
 	bool moveRight = true;
 
-	//EntityType type = EntityType::ENEMY;
-
 	int speed = 2;
 
 	void Update();
-	void Render(const MyTexture& texture);
+	void Render(const MyTexture& texture) const noexcept;
 };

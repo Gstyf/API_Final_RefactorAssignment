@@ -2,8 +2,6 @@
 
 void Alien::Update()
 {
-	//int window_width = GetScreenWidth();
-
 	if (moveRight)
 	{
 		position.x += speed;
@@ -26,7 +24,7 @@ void Alien::Update()
 	}
 }
 
-void Alien::Render(const MyTexture& texture)
+void Alien::Render(const MyTexture& texture) const noexcept
 {
 	DrawTexture(texture.GetTexture(),
 		static_cast<int>(position.x) - texture.WidthHalf(),

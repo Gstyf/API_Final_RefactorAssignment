@@ -6,10 +6,12 @@
 #pragma warning(pop)
 #include "MyTexture.hpp"
 
+//TODO: Move fields to private, use setters and getters
 class Wall
 {
 public:
-	explicit Wall(Vector2 spawnPos) : position(spawnPos) {}
+	explicit Wall(Vector2 spawnPos) noexcept : position(spawnPos) {}
+	
 	Vector2 position;
 	bool active = true;
 	int health = 50;
