@@ -75,12 +75,6 @@ struct Game
 	//Aliens shooting
 	float shootTimer = 0;
 
-	int formationWidth = 8;
-	int formationHeight = 5;
-	int alienSpacing = 80;
-	float formationX = 100;
-	float formationY = 50;
-
 	bool newHighScore = false;
 
 	Player player{static_cast<float>(GetScreenWidth() / 2)};
@@ -117,7 +111,6 @@ struct Game
 	void SpawnAliens();
 
 	bool CheckNewHighScore();
-
 	void InsertNewHighScore(std::string& name);
 
 	void LoadLeaderboard();

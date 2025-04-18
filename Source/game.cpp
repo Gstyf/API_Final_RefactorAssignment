@@ -230,7 +230,7 @@ void Game::Update()
 
 			if (Aliens.size() > 1)
 			{
-				randomAlienIndex = rand() % Aliens.size();
+				randomAlienIndex = GetRandomValue(0, static_cast<int>(Aliens.size()) - 1);
 			}
 
 			const Projectile newProjectile({Aliens[randomAlienIndex].position}, enemyProjectileSpeed);
