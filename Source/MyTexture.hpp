@@ -73,4 +73,9 @@ public:
 	{
 		return static_cast<float>(myTex.height / 2);
 	}
+
+	Rectangle GetTextureRectangle()
+	{
+		return Rectangle{ 0,0, Widthf(), Heightf() };
+	}
 };

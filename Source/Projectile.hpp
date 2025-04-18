@@ -6,10 +6,11 @@
 #pragma warning(pop)
 #include "MyTexture.hpp"
 
-struct Projectile
+class Projectile
 {
 public:
-	// INITIALIZE PROJECTILE WHILE DEFINING IF ITS PLAYER OR ENEMY 
+	Projectile(Vector2 spawnPos, int direction) noexcept : position(spawnPos), speed(direction) {}
+
 	Vector2 position = { 0,0 };
 	int speed = 15;
 	bool active = true;
@@ -17,6 +18,4 @@ public:
 	void Update();
 
 	void Render(const MyTexture& texture);
-
-	Rectangle GetRect();
 };

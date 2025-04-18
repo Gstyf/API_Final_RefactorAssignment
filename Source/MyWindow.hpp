@@ -8,7 +8,7 @@
 
 class MyWindow {
 public:
-	explicit MyWindow() {
+	 MyWindow() {
 		InitWindow(_WINDOW_WIDTH, _WINDOW_HEIGHT, _WINDOW_TITLE.data());
 		if (!IsWindowReady())
 		{

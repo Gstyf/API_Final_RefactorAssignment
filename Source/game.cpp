@@ -8,22 +8,13 @@
 void Game::Start()
 {
 	// creating walls 
-	float window_width = (float)GetScreenWidth();
-	float window_height = (float)GetScreenHeight();
-	float wall_distance = window_width / (wallCount + 1);
+	const float window_width = static_cast<float>(GetScreenWidth());
+	const float wall_distance = window_width / (wallCount + 1);
 	for (int i = 0; i < wallCount; i++)
 	{
-		Wall newWalls;
-		newWalls.position.y = window_height - 250;
-		newWalls.position.x = wall_distance * (i + 1);
-
+		const Wall newWalls({wall_distance * (i + 1), static_cast<float>(GetScreenHeight() - 250)});
 		Walls.push_back(newWalls);
 	}
-
-	//creating player
-	Player newPlayer;
-	player = newPlayer;
-	player.Initialize();
 
 	//creating aliens
 	SpawnAliens();
@@ -113,9 +104,7 @@ void Game::Update()
 		}
 
 		// Update background with offset
-		playerPos = { player.x_pos, (float)player.player_base_height }; //TODO: Why is playerPos reassigned here?
-		cornerPos = { 0, (float)player.player_base_height };
-		offset = 2; //lineLength(playerPos, cornerPos) * -1;
+		offset = player.x_pos; //lineLength(playerPos, cornerPos) * -1;
 		background.Update(offset / 15);//TODO: Magic number
 
 
@@ -229,15 +218,7 @@ void Game::Update()
 		}
 
 		//MAKE PROJECTILE
-		if (IsKeyPressed(KEY_SPACE))
-		{
-			float window_height = (float)GetScreenHeight();
-			Projectile newProjectile;
-			newProjectile.position.x = player.x_pos;
-			newProjectile.position.y = window_height - 130;
-			//newProjectile.type = EntityType::PLAYER_PROJECTILE;
-			playerProjectiles.push_back(newProjectile);
-		}
+		Shoot();
 
 		//TODO: consider making alien shooting more interesting and erratic. Now only one alient will shoot every 2 seconds, and it is random which one.
 		//Aliens Shooting
@@ -251,11 +232,7 @@ void Game::Update()
 				randomAlienIndex = rand() % Aliens.size();
 			}
 
-			Projectile newProjectile;
-			newProjectile.position = Aliens[randomAlienIndex].position;
-			newProjectile.position.y += 40;
-			newProjectile.speed = -15;
-			//newProjectile.type = EntityType::ENEMY_PROJECTILE;
+			const Projectile newProjectile({Aliens[randomAlienIndex].position}, -15);
 			enemyProjectiles.push_back(newProjectile);
 			shootTimer = 0;
 		}
@@ -498,6 +475,15 @@ void Game::Render()
 	EndDrawing();
 }
 
+void Game::Shoot()
+{
+	if (IsKeyPressed(KEY_SPACE))
+	{
+		const Projectile newProjectile({player.x_pos, static_cast<float>(GetScreenHeight())}, 15);
+		playerProjectiles.push_back(newProjectile);
+	}
+}
+
 void Game::SpawnAliens()
 {
 	for (int row = 0; row < formationHeight; row++) {
@@ -581,112 +567,6 @@ void Game::SaveLeaderboard()
 	// WRITE ARRAY DATA INTO FILE
 
 	// CLOSE FILE
-}
-
-void Player::Initialize()
-{
-	float window_width = (float)GetScreenWidth();
-	x_pos = window_width / 2;
-	std::cout << "Find Player -X:" << GetScreenWidth() / 2 << "Find Player -Y" << GetScreenHeight() - player_base_height << std::endl;
-}
-
-void Player::Update()
-{
-	//Movement
-	direction = 0;
-	if (IsKeyDown(KEY_LEFT))
-	{
-		direction--;
-	}
-	if (IsKeyDown(KEY_RIGHT))
-	{
-		direction++;
-	}
-
-	x_pos += speed * direction;
-
-	if (x_pos < 0 + radius)
-	{
-		x_pos = 0 + radius;
-	}
-	else if (x_pos > GetScreenWidth() - radius)
-	{
-		x_pos = GetScreenWidth() - radius;
-	}
-	//Determine frame for animation
-	timer += GetFrameTime();
-
-	if (timer > 0.4 && activeTexture == 2)
-	{
-		activeTexture = 0;
-		timer = 0;
-	}
-	else if (timer > 0.4)
-	{
-		activeTexture++;
-		timer = 0;
-	}
-}
-
-void Player::Render(const MyTexture& texture)
-{
-	//float window_height = GetScreenHeight();
-	DrawTexture(texture.GetTexture(),
-		static_cast<int>(x_pos) - texture.WidthHalf(), GetScreenHeight() - texture.Height(), WHITE);
-}
-
-
-
-void Wall::Render(const MyTexture& texture)
-{
-	DrawTexture(texture.GetTexture(),
-		static_cast<int>(position.x) - texture.WidthHalf(),
-		static_cast<int>(position.y) - texture.HeightHalf(),
-		WHITE);
-	DrawText(TextFormat("%i", health), static_cast<int>(position.x) - 21,
-		static_cast<int>(position.y) + 10, 40, RED);
-}
-
-void Wall::Update()
-{
-	// set walls as inactive when out of health
-	if (health < 1)
-	{
-		active = false;
-	}
-}
-
-void Alien::Update()
-{
-	//int window_width = GetScreenWidth();
-
-	if (moveRight)
-	{
-		position.x += speed;
-
-		if (position.x >= GetScreenWidth())
-		{
-			moveRight = false;
-			position.y += 50;
-		}
-	}
-	else
-	{
-		position.x -= speed;
-
-		if (position.x <= 0)
-		{
-			moveRight = true;
-			position.y += 50;
-		}
-	}
-}
-
-void Alien::Render(const MyTexture& texture)
-{
-	DrawTexture(texture.GetTexture(),
-		static_cast<int>(position.x) - texture.WidthHalf(),
-		static_cast<int>(position.y) - texture.HeightHalf(), WHITE);
 }
 
 

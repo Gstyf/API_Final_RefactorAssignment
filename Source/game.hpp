@@ -6,7 +6,10 @@
 #pragma warning(pop)
 #include "MyTexture.hpp"
 #include "MyWindow.hpp"
+#include "Player.hpp"
+#include "Alien.hpp"
 #include "Projectile.hpp"
+#include "Wall.hpp"
 #include <array>
 #include <vector>
 #include <string>
@@ -19,76 +22,11 @@ enum struct State
 	GAMEPLAY,
 	ENDSCREEN
 };
-//
-//enum struct EntityType
-//{
-//	PLAYER,
-//	ENEMY,
-//	PLAYER_PROJECTILE,
-//	ENEMY_PROJECTILE
-//};
 
 struct PlayerData
 {
 	std::string name;
 	int score;
-};
-
-struct Player
-{
-public:
-
-	float x_pos = 0;
-	float speed = 7;
-	float player_base_height = 100.0f;
-	float radius = 50;
-	int lives = 3;
-	int direction = 0;
-	int activeTexture = 0;
-	float timer = 0;
-
-	//EntityType type = EntityType::PLAYER;
-
-	void Initialize();
-	void Render(const MyTexture& texture);
-	void Update();
-
-};
-
-
-
-
-struct Wall
-{
-public:
-	Vector2 position;
-	Rectangle rec;
-	bool active;
-	Color color;
-	int health = 50;
-	int radius = 60;
-
-	void Render(const MyTexture& texture);
-	void Update();
-};
-
-struct Alien
-{
-public:
-	static constexpr Color color = WHITE; // IF THEY DON'T CHANGE, THEY CAN BE CONSTEXPR, but why do they need to store color?
-	Vector2 position = { 0, 0 }; //Why do we have position twice?!
-	int x = 0;
-	int y = 0;
-	static constexpr float radius = 30;
-	bool active = true;
-	bool moveRight = true;
-
-	//EntityType type = EntityType::ENEMY;
-
-	int speed = 2;
-
-	void Update();
-	void Render(const MyTexture& texture);
 };
 
 
@@ -134,14 +72,8 @@ struct Game
 	// Score
 	int score;
 
-	// for later, make a file where you can adjust the number of walls (config file) 
-	int wallCount = 5;
-
 	//Aliens shooting
 	float shootTimer = 0;
-
-	//Aliens stuff? (idk cause liv wrote this)
-	Rectangle rec = { 0, 0 ,0 ,0 };
 
 	int formationWidth = 8;
 	int formationHeight = 5;
@@ -151,23 +83,16 @@ struct Game
 
 	bool newHighScore = false;
 
-	//TODO: Move these classes and their definitions to their respective headers.
-	Player player;
+	Player player{static_cast<float>(GetScreenWidth() / 2)};
+	std::vector<Wall> Walls;
+	std::vector<Alien> Aliens;
 
 	std::vector<Projectile> playerProjectiles;
 	std::vector<Projectile> enemyProjectiles;
 
-	std::vector<Wall> Walls;
-
-	std::vector<Alien> Aliens;
-
 	std::vector<PlayerData> Leaderboard = { {"Player 1", 500}, {"Player 2", 400}, {"Player 3", 300}, {"Player 4", 200}, {"Player 5", 100} };
 
 	Background background;
-
-	Vector2 playerPos;
-	Vector2 alienPos;
-	Vector2 cornerPos;
 	float offset;
 
 	//TEXTBOX ENTER
@@ -188,6 +113,7 @@ struct Game
 	void Update();
 	void Render();
 
+	void Shoot();
 	void SpawnAliens();
 
 	bool CheckNewHighScore();

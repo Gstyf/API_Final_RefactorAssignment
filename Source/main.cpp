@@ -39,7 +39,7 @@ int main(void)
 {
 	try {
 		// Initialization
-		Game game{ State::STARTSCREEN };
+		Game game( State::STARTSCREEN );
 		// Game loop
 		game.Run();
 	}
