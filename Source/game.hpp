@@ -72,11 +72,10 @@ struct Game
 
 	// Score
 	int score;
+	bool newHighScore = false;
 
 	//Aliens shooting
 	float shootTimer = 0;
-
-	bool newHighScore = false;
 
 	Player player{static_cast<float>(GetScreenWidth() / 2)};
 	std::vector<Wall> Walls;
@@ -106,7 +105,13 @@ struct Game
 
 	void Run();
 	void Update();
+	void GamePlayLogic();
+	void EndScreenLogic();
 	void Render();
+
+	void EndgameDraw();
+
+	void GamePlayDraw();
 
 	void Shoot();
 	void SpawnAliens();
