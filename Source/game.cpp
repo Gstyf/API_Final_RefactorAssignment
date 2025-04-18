@@ -342,6 +342,8 @@ void Game::Update()
 //TODO: Refactor biggly, this is a long function (130 lines)
 void Game::Render()
 {
+	BeginDrawing();
+	ClearBackground(BLACK);
 	switch (gameState)
 	{
 	case State::STARTSCREEN:
@@ -452,6 +454,7 @@ void Game::Render()
 		//SHOULD NOT HAPPEN
 		break;
 	}
+	EndDrawing();
 }
 
 void Game::SpawnAliens()
