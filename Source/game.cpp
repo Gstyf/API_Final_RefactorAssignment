@@ -35,7 +35,7 @@ void Game::End()
 	gameState = State::ENDSCREEN;
 }
 
-void Game::Continue()
+void Game::Continue() noexcept
 {
 	gameState = State::STARTSCREEN;
 }

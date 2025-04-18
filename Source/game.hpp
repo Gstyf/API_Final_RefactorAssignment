@@ -87,7 +87,7 @@ struct Game
 	void Start();
 	void End();
 
-	void Continue();
+	void Continue() noexcept;
 
 	void Run();
 	void Update();
