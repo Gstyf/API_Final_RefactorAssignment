@@ -169,6 +169,7 @@
   <ItemGroup>
     <ClCompile Include="Source\game.cpp" />
     <ClCompile Include="Source\main.cpp" />
+    <ClCompile Include="Source\Projectile.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Constants.hpp" />

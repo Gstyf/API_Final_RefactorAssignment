@@ -34,12 +34,13 @@
 //------------------------------------------------------------------------------------
 // Program main entry point
 //------------------------------------------------------------------------------------
+
 int main(void)
 {
 	try {
 		// Initialization
 		Game game{ State::STARTSCREEN };
-		// Gameloop
+		// Game loop
 		game.Run();
 	}
 	catch (const std::runtime_error& e) {

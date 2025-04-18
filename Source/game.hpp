@@ -6,6 +6,7 @@
 #pragma warning(pop)
 #include "MyTexture.hpp"
 #include "MyWindow.hpp"
+#include "Projectile.hpp"
 #include <array>
 #include <vector>
 #include <string>
@@ -18,14 +19,14 @@ enum struct State
 	GAMEPLAY,
 	ENDSCREEN
 };
-
-enum struct EntityType
-{
-	PLAYER,
-	ENEMY,
-	PLAYER_PROJECTILE,
-	ENEMY_PROJECTILE
-};
+//
+//enum struct EntityType
+//{
+//	PLAYER,
+//	ENEMY,
+//	PLAYER_PROJECTILE,
+//	ENEMY_PROJECTILE
+//};
 
 struct PlayerData
 {
@@ -46,7 +47,7 @@ public:
 	int activeTexture = 0;
 	float timer = 0;
 
-	EntityType type = EntityType::PLAYER;
+	//EntityType type = EntityType::PLAYER;
 
 	void Initialize();
 	void Render(const MyTexture& texture);
@@ -55,23 +56,7 @@ public:
 };
 
 
-struct Projectile
-{
-public:
-	// INITIALIZE PROJECTILE WHILE DEFINING IF ITS PLAYER OR ENEMY 
-	Vector2 position = { 0,0 };
-	int speed = 15;
-	bool active = true;
-	EntityType type = {};
 
-	// LINE WILL UPDATE WITH POSITION FOR CALCULATIONS
-	Vector2 lineStart = { 0, 0 };
-	Vector2 lineEnd = { 0, 0 };
-
-	void Update();
-
-	void Render(const MyTexture& texture);
-};
 
 struct Wall
 {
@@ -98,7 +83,7 @@ public:
 	bool active = true;
 	bool moveRight = true;
 
-	EntityType type = EntityType::ENEMY;
+	//EntityType type = EntityType::ENEMY;
 
 	int speed = 2;
 
@@ -169,7 +154,8 @@ struct Game
 	//TODO: Move these classes and their definitions to their respective headers.
 	Player player;
 
-	std::vector<Projectile> Projectiles; //TODO: keep different lists for player projectiles an dalien projectiles. They are the same type but serve different purposes. 
+	std::vector<Projectile> playerProjectiles;
+	std::vector<Projectile> enemyProjectiles;
 
 	std::vector<Wall> Walls;
 

@@ -42,7 +42,8 @@ void Game::Start()
 void Game::End()
 {
 	//SAVE SCORE AND UPDATE SCOREBOARD
-	Projectiles.clear();
+	playerProjectiles.clear();
+	enemyProjectiles.clear();
 	Walls.clear();
 	Aliens.clear();
 	newHighScore = CheckNewHighScore();
@@ -119,95 +120,110 @@ void Game::Update()
 
 
 		//UPDATE PROJECTILE
-		for (int i = 0; i < Projectiles.size(); i++)
+		for (Projectile& pp : playerProjectiles)
 		{
-			Projectiles[i].Update();
+			pp.Update();
 		}
+		for (Projectile& ep : enemyProjectiles)
+		{
+			ep.Update();
+		}
+
 		//UPDATE PROJECTILE
 		for (int i = 0; i < Walls.size(); i++)
 		{
 			Walls[i].Update();
 		}
-		//TODO: refactor collision check into own function
-		//CHECK ALL COLLISONS HERE
-		for (int i = 0; i < Projectiles.size(); i++)
+
+
+		for (Projectile& p : playerProjectiles)
 		{
-			if (Projectiles[i].type == EntityType::PLAYER_PROJECTILE)
-			{
-				for (int a = 0; a < Aliens.size(); a++)
-				{
-					if (CheckCollisionRecs(
-						{
-							Aliens[a].position.x - alienTexture.WidthHalff(),
-							Aliens[a].position.y - alienTexture.HeightHalff(),
-							alienTexture.Widthf(), alienTexture.Heightf()
-						},
-						{
-							Projectiles[i].position.x - laserTexture.WidthHalff(),
-							Projectiles[i].position.y - laserTexture.HeightHalff(),
-							laserTexture.Widthf(), laserTexture.Heightf()
-						}))
-
-						//CheckCollision(Aliens[a].position, Aliens[a].radius, Projectiles[i].lineStart, Projectiles[i].lineEnd))
-					{
-						// Kill!
-						std::cout << "Hit! \n";
-						// Set them as inactive, will be killed later
-						Projectiles[i].active = false;
-						Aliens[a].active = false;
-						score += 100;
-					}
-				}
-			}
-
-			//ENEMY PROJECTILES HERE
-			for (int p = 0; p < Projectiles.size(); p++)
-			{
-				if (Projectiles[p].type == EntityType::ENEMY_PROJECTILE)
-				{
-					if (CheckCollisionRecs(
-						{
-							player.x_pos - shipTextures[player.activeTexture].WidthHalff(),
-							GetScreenHeight() - shipTextures[player.activeTexture].Heightf(),
-							shipTextures[player.activeTexture].Widthf(), shipTextures[player.activeTexture].Heightf()
-						},
-						{
-							Projectiles[p].position.x - laserTexture.WidthHalff(),
-							Projectiles[p].position.y - laserTexture.HeightHalff(),
-							laserTexture.Widthf(), laserTexture.Heightf()
-						})
-						//CheckCollision({ player.x_pos, GetScreenHeight() - player.player_base_height }, player.radius, Projectiles[i].lineStart, Projectiles[i].lineEnd)
-						)
-					{
-						std::cout << "dead!\n";
-						Projectiles[p].active = false;
-						player.lives -= 1;
-					}
-				}
-			}
-
-			for (int b = 0; b < Walls.size(); b++)
+			for (Alien& a : Aliens)
 			{
 				if (CheckCollisionRecs(
 					{
-						Walls[b].position.x - wallTexture.WidthHalff(),
-						Walls[b].position.y - wallTexture.HeightHalff(),
+						a.position.x - alienTexture.WidthHalff(),
+						a.position.y - alienTexture.HeightHalff(),
+						alienTexture.Widthf(), alienTexture.Heightf()
+					},
+						{
+							p.position.x - laserTexture.WidthHalff(),
+							p.position.y - laserTexture.HeightHalff(),
+							laserTexture.Widthf(), laserTexture.Heightf()
+						}))
+				{
+					// Kill!
+					std::cout << "Hit! \n";
+					// Set them as inactive, will be killed later
+					p.active = false;
+					a.active = false;
+					score += 100;
+				}
+			}
+			for (Wall& w : Walls)
+			{
+				if (CheckCollisionRecs(
+					{
+						w.position.x - wallTexture.WidthHalff(),
+						w.position.y - wallTexture.HeightHalff(),
 						wallTexture.Widthf(), wallTexture.Heightf()
 					},
 						{
-							Projectiles[i].position.x - laserTexture.WidthHalff(),
-							Projectiles[i].position.y - laserTexture.HeightHalff(),
+							p.position.x - laserTexture.WidthHalff(),
+							p.position.y - laserTexture.HeightHalff(),
 							laserTexture.Widthf(), laserTexture.Heightf()
 						})
-
-					//CheckCollision(Walls[b].position, Walls[b].radius, Projectiles[i].lineStart, Projectiles[i].lineEnd)
 					)
 				{
 					// Kill!
 					std::cout << "Hit! \n";
 					// Set them as inactive, will be killed later
-					Projectiles[i].active = false;
-					Walls[b].health -= 1;
+					p.active = false;
+					w.health -= 1;
+				}
+			}
+		}
+
+		//ENEMY PROJECTILES HERE
+		for (Projectile& e : enemyProjectiles)
+		{
+			if (CheckCollisionRecs(
+				{
+					player.x_pos - shipTextures[player.activeTexture].WidthHalff(),
+					GetScreenHeight() - shipTextures[player.activeTexture].Heightf(),
+					shipTextures[player.activeTexture].Widthf(), shipTextures[player.activeTexture].Heightf()
+				},
+						{
+							e.position.x - laserTexture.WidthHalff(),
+							e.position.y - laserTexture.HeightHalff(),
+							laserTexture.Widthf(), laserTexture.Heightf()
+						})
+				)
+			{
+				std::cout << "dead!\n";
+				e.active = false;
+				player.lives -= 1;
+			}
+			for (Wall& w : Walls)
+			{
+				if (CheckCollisionRecs(
+					{
+						w.position.x - wallTexture.WidthHalff(),
+						w.position.y - wallTexture.HeightHalff(),
+						wallTexture.Widthf(), wallTexture.Heightf()
+					},
+						{
+							e.position.x - laserTexture.WidthHalff(),
+							e.position.y - laserTexture.HeightHalff(),
+							laserTexture.Widthf(), laserTexture.Heightf()
+						})
+					)
+				{
+					// Kill!
+					std::cout << "Hit! \n";
+					// Set them as inactive, will be killed later
+					e.active = false;
+					w.health -= 1;
 				}
 			}
 		}
@@ -219,8 +235,8 @@ void Game::Update()
 			Projectile newProjectile;
 			newProjectile.position.x = player.x_pos;
 			newProjectile.position.y = window_height - 130;
-			newProjectile.type = EntityType::PLAYER_PROJECTILE;
-			Projectiles.push_back(newProjectile);
+			//newProjectile.type = EntityType::PLAYER_PROJECTILE;
+			playerProjectiles.push_back(newProjectile);
 		}
 
 		//TODO: consider making alien shooting more interesting and erratic. Now only one alient will shoot every 2 seconds, and it is random which one.
@@ -239,19 +255,29 @@ void Game::Update()
 			newProjectile.position = Aliens[randomAlienIndex].position;
 			newProjectile.position.y += 40;
 			newProjectile.speed = -15;
-			newProjectile.type = EntityType::ENEMY_PROJECTILE;
-			Projectiles.push_back(newProjectile);
+			//newProjectile.type = EntityType::ENEMY_PROJECTILE;
+			enemyProjectiles.push_back(newProjectile);
 			shootTimer = 0;
 		}
 
 		//TODO: refactor cleanup into own function. 
 		//TODO: use ranged-fors instead
 		// REMOVE INACTIVE/DEAD ENITITIES
-		for (int i = 0; i < Projectiles.size(); i++)
+		for (int i = 0; i < playerProjectiles.size(); i++)
 		{
-			if (Projectiles[i].active == false)
+			if (playerProjectiles[i].active == false)
 			{
-				Projectiles.erase(Projectiles.begin() + i);
+				playerProjectiles.erase(playerProjectiles.begin() + i);
+				// Prevent the loop from skipping an instance because of index changes, since all insances after
+				// the killed objects are moved down in index. This is the same for all loops with similar function
+				i--;
+			}
+		}
+		for (int i = 0; i < enemyProjectiles.size(); i++)
+		{
+			if (enemyProjectiles[i].active == false)
+			{
+				enemyProjectiles.erase(enemyProjectiles.begin() + i);
 				// Prevent the loop from skipping an instance because of index changes, since all insances after
 				// the killed objects are moved down in index. This is the same for all loops with similar function
 				i--;
@@ -378,9 +404,14 @@ void Game::Render()
 
 		//TODO: Use range-fors instead
 		//projectile rendering
-		for (int i = 0; i < Projectiles.size(); i++)
+
+		for (Projectile p : playerProjectiles)
 		{
-			Projectiles[i].Render(laserTexture);
+			p.Render(laserTexture);
+		}
+		for (Projectile e : enemyProjectiles)
+		{
+			e.Render(laserTexture);
 		}
 
 		// wall rendering 
@@ -604,30 +635,7 @@ void Player::Render(const MyTexture& texture)
 		static_cast<int>(x_pos) - texture.WidthHalf(), GetScreenHeight() - texture.Height(), WHITE);
 }
 
-void Projectile::Update()
-{
-	position.y -= speed;
 
-	// UPDATE LINE POSITION
-	lineStart.y = position.y - 15;
-	lineEnd.y = position.y + 15;
-
-	lineStart.x = position.x;
-	lineEnd.x = position.x;
-
-	if (position.y < 0 || position.y > 1500)
-	{
-		active = false;
-	}
-}
-
-void Projectile::Render(const MyTexture& texture)
-{
-	//DrawCircle((int)position.x, (int)position.y, 10, RED);
-	DrawTexture(texture.GetTexture(),
-		static_cast<int>(position.x) - texture.WidthHalf(),
-		static_cast<int>(position.y) - texture.HeightHalf(), WHITE);
-}
 
 void Wall::Render(const MyTexture& texture)
 {
