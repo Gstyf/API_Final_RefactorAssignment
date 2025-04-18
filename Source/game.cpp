@@ -55,22 +55,15 @@ void Game::Update()
 	switch (gameState)
 	{
 	case State::STARTSCREEN:
-		if (IsKeyReleased(KEY_SPACE))
-		{
-			Start();
-		}
+		if (IsKeyReleased(KEY_SPACE)) Start();
 		break;
 	case State::GAMEPLAY:
 		GamePlayLogic();
-
 		break;
 	case State::ENDSCREEN:
-		//Code
 		EndScreenLogic();
-
 		break;
 	default:
-		//SHOULD NOT HAPPEN
 		break;
 	}
 }
@@ -281,7 +274,7 @@ void Game::GamePlayLogic()
 
 void Game::EndScreenLogic()
 {
-	//Exit endscreen
+	//Exit end screen
 	if (IsKeyReleased(KEY_ENTER) && !newHighScore)
 	{
 		Continue();
@@ -307,19 +300,17 @@ void Game::EndScreenLogic()
 				// NOTE: Only allow keys in range [32..125]
 				if ((key >= 32) && (key <= 125) && (letterCount < 9))
 				{
-					name[letterCount] = (char)key;
-					name[letterCount + 1] = '\0'; // Add null terminator at the end of the string.
+					highscoreNameEntry += static_cast<char>(key);
 					letterCount++;
 				}
 				key = GetCharPressed();  // Check next character in the queue
 			}
 
 			//Remove chars 
-			if (IsKeyPressed(KEY_BACKSPACE))
+			if (IsKeyPressed(KEY_BACKSPACE) && letterCount > 0)
 			{
 				letterCount--;
-				if (letterCount < 0) letterCount = 0;
-				name[letterCount] = '\0';
+				highscoreNameEntry.pop_back();
 			}
 		}
 		else SetMouseCursor(MOUSE_CURSOR_DEFAULT);
@@ -333,14 +324,11 @@ void Game::EndScreenLogic()
 			framesCounter = 0;
 		}
 
-		// If the name is right legth and enter is pressed, exit screen by setting highscore to false and add 
-		// name + score to scoreboard
+		// If the name is right length and enter is pressed, exit screen by setting 
+		// highscore to false and add name + score to scoreboard
 		if (letterCount > 0 && letterCount < 9 && IsKeyReleased(KEY_ENTER))
 		{
-			std::string nameEntry(name);
-
-			InsertNewHighScore(nameEntry);
-
+			InsertNewHighScore(highscoreNameEntry);
 			newHighScore = false;
 		}
 	}
@@ -425,7 +413,7 @@ void Game::EndgameDraw()
 		}
 
 		//Draw the name being typed out
-		DrawText(name, (int)textBox.x + 5, (int)textBox.y + 8, 40, MAROON);
+		DrawText(highscoreNameEntry.data(), (int)textBox.x + 5, (int)textBox.y + 8, 40, MAROON);
 
 		//Draw the text explaining how many characters are used
 		DrawText(TextFormat("INPUT CHARS: %i/%i", letterCount, 8), 600, 600, 20, YELLOW);
@@ -437,7 +425,7 @@ void Game::EndgameDraw()
 				// Draw blinking underscore char
 				if (((framesCounter / 20) % 2) == 0)
 				{
-					DrawText("_", (int)textBox.x + 8 + MeasureText(name, 40), (int)textBox.y + 12, 40, MAROON);
+					DrawText("_", (int)textBox.x + 8 + MeasureText(highscoreNameEntry.data(), 40), (int)textBox.y + 12, 40, MAROON);
 				}
 			}
 			else

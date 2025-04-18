@@ -76,7 +76,7 @@ struct Game
 	Background background;
 
 	//TEXTBOX ENTER
-	char name[9 + 1] = "\0";      //One extra space required for null terminator char '\0'
+	std::string highscoreNameEntry = ""; 
 	int letterCount = 0;
 
 	Rectangle textBox = { 600, 500, 225, 50 };
@@ -86,17 +86,15 @@ struct Game
 
 	void Start();
 	void End();
-
 	void Continue() noexcept;
-
 	void Run();
+	
 	void Update();
 	void GamePlayLogic();
 	void EndScreenLogic();
+	
 	void Render();
-
 	void EndgameDraw();
-
 	void GamePlayDraw();
 
 	void Shoot();
