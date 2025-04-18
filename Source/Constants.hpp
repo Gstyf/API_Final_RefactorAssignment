@@ -9,3 +9,10 @@ constexpr float wallCount = 5;
 
 constexpr int playerProjectileSpeed = 15;
 constexpr int enemyProjectileSpeed = -15;
+
+//Alien Spawning Constants
+constexpr int formationWidth = 8;
+constexpr int formationHeight = 5;
+constexpr int alienSpacing = 80;
+constexpr float formationX = 100;
+constexpr float formationY = 50;
