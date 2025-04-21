@@ -92,6 +92,8 @@ struct Game
 	void Update();
 	void GamePlayLogic();
 	void EndScreenLogic();
+
+	void HandleKeyboardInput();
 	
 	void Render();
 	void EndgameDraw();

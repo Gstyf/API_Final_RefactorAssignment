@@ -291,27 +291,7 @@ void Game::EndScreenLogic()
 			// Set the window's cursor to the I-Beam
 			SetMouseCursor(MOUSE_CURSOR_IBEAM);
 
-			// Get char pressed on the queue
-			int key = GetCharPressed();
-
-			// Check if more characters have been pressed on the same frame
-			while (key > 0)
-			{
-				// NOTE: Only allow keys in range [32..125]
-				if ((key >= 32) && (key <= 125) && (letterCount < 9))
-				{
-					highscoreNameEntry += static_cast<char>(key);
-					letterCount++;
-				}
-				key = GetCharPressed();  // Check next character in the queue
-			}
-
-			//Remove chars 
-			if (IsKeyPressed(KEY_BACKSPACE) && letterCount > 0)
-			{
-				letterCount--;
-				highscoreNameEntry.pop_back();
-			}
+			HandleKeyboardInput();
 		}
 		else SetMouseCursor(MOUSE_CURSOR_DEFAULT);
 
@@ -331,6 +311,31 @@ void Game::EndScreenLogic()
 			InsertNewHighScore(highscoreNameEntry);
 			newHighScore = false;
 		}
+	}
+}
+
+void Game::HandleKeyboardInput()
+{
+	// Get char pressed on the queue
+	int key = GetCharPressed();
+
+	// Check if more characters have been pressed on the same frame
+	while (key > 0)
+	{
+		// NOTE: Only allow keys in range [32..125]
+		if ((key >= 32) && (key <= 125) && (letterCount < 9))
+		{
+			highscoreNameEntry += static_cast<char>(key);
+			letterCount++;
+		}
+		key = GetCharPressed();  // Check next character in the queue
+	}
+
+	//Remove chars 
+	if (IsKeyPressed(KEY_BACKSPACE) && letterCount > 0)
+	{
+		letterCount--;
+		highscoreNameEntry.pop_back();
 	}
 }
 
