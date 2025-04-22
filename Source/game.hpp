@@ -15,7 +15,6 @@
 #include <string>
 #include <stdexcept>
 
-// TODO: Clean Game.h Too many objects are handled here that could have their own headers.
 enum struct State
 {
 	STARTSCREEN,
@@ -37,8 +36,9 @@ public:
 	void Render(const MyTexture& tex) const noexcept;
 };
 
-struct Game
+class Game
 {
+public:
 	explicit Game(State state) : gameState(state) {}
 
 	// Window
@@ -58,22 +58,22 @@ struct Game
 	};
 
 	// Score
-	int score;
+	int score = 0;
 	bool newHighScore = false;
 
 	//Aliens shooting
 	float shootTimer = 0;
 
-	Player player{{ static_cast<float>(GetScreenWidth() / 2), static_cast<float>(GetScreenHeight()) }};
+	Player player{{ _screenHalfWidthF, _screenHeightF }};
 	std::vector<Wall> Walls;
 	std::vector<Alien> Aliens;
 
 	std::vector<Projectile> playerProjectiles;
 	std::vector<Projectile> enemyProjectiles;
 
-	std::vector<PlayerData> Leaderboard = { {"Player 1", 500}, {"Player 2", 400}, {"Player 3", 300}, {"Player 4", 200}, {"Player 5", 100} };
-
 	Background background;
+
+	std::vector<PlayerData> Leaderboard = { {"Player 1", 500}, {"Player 2", 400}, {"Player 3", 300}, {"Player 4", 200}, {"Player 5", 100} };
 
 	//TEXTBOX ENTER
 	std::string highscoreNameEntry = ""; 
@@ -91,13 +91,17 @@ struct Game
 	
 	void Update();
 	void GamePlayLogic();
+	void CheckIfGameOver();
+	void UpdateProjectiles();
+	void ResolveProjectileCollisions();
+	void RemoveDeadEntities();
 	void EndScreenLogic();
 
 	void HandleKeyboardInput();
 	
 	void Render();
 	void EndgameDraw();
-	void GamePlayDraw();
+	void GamePlayDraw() const noexcept;
 
 	void Shoot();
 	void SpawnAliens();

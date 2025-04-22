@@ -17,7 +17,7 @@ public:
 	bool active = true;
 	bool moveRight = true;
 
-	int speed = 2;
+	float speed = 2;
 
 	void Update() noexcept;
 	void Render(const MyTexture& texture) const noexcept;

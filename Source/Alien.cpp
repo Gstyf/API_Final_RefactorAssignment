@@ -1,4 +1,5 @@
 #include "Alien.hpp"
+#include "Constants.hpp"
 
 void Alien::Update() noexcept
 {
@@ -6,7 +7,7 @@ void Alien::Update() noexcept
 	{
 		position.x += speed;
 
-		if (position.x >= GetScreenWidth())
+		if (position.x >= _screenWidthF)
 		{
 			moveRight = false;
 			position.y += 50;

@@ -1,4 +1,5 @@
 #include "Wall.hpp"
+#include "Constants.hpp"
 
 void Wall::Update() noexcept
 {
@@ -15,8 +16,8 @@ void Wall::Render(const MyTexture& texture) const noexcept
 		static_cast<int>(position.x) - texture.WidthHalf(),
 		static_cast<int>(position.y) - texture.HeightHalf(),
 		WHITE);
-	DrawText(TextFormat("%i", health), static_cast<int>(position.x) - 21,
-		static_cast<int>(position.y) + 10, 40, RED);
+	DrawText(TextFormat("%i", health), static_cast<int>(position.x) - wallHealthOffsetX,
+		static_cast<int>(position.y), 40, RED);
 }
 
 Rectangle Wall::GetRect(const MyTexture& texture) const noexcept

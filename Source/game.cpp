@@ -8,8 +8,8 @@
 void Game::Start()
 {
 	// creating walls 
-	const auto window_width = static_cast<float>(GetScreenWidth());
-	const float wall_distance = window_width / (wallCount + 1);
+	//_screenWidthFconst auto window_width = static_cast<float>(GetScreenWidth());
+	const float wall_distance = _screenWidthF / (wallCount + 1);
 	for (int i = 0; i < wallCount; i++)
 	{
 		const Wall newWalls({ wall_distance * (i + 1), GetScreenHeight() - wallOffsetY });
@@ -71,13 +71,57 @@ void Game::Update()
 //TODO: Refactor A LOT!
 void Game::GamePlayLogic()
 {
-	//Code
 	if (IsKeyReleased(KEY_Q))
 	{
 		End();
 	}
-	//Update Player
+	CheckIfGameOver();
+
 	player.Update();
+	background.Update(static_cast<int>(player.position.x) - (GetScreenWidth() / 2));
+
+	//Spawn new aliens if aliens run out
+	if (Aliens.size() < 1)
+	{
+		SpawnAliens();
+	}
+
+	// Update background with offset
+
+	for (Wall& w : Walls)
+	{
+		w.Update();
+	}
+
+	UpdateProjectiles();
+	ResolveProjectileCollisions();
+	Shoot();
+
+	//TODO: consider making alien shooting more interesting and erratic. Now only one alient will shoot every 2 seconds, and it is random which one.
+	//Aliens Shooting
+	shootTimer += 1;
+	if (shootTimer > 59) //once per second
+	{
+		int randomAlienIndex = 0;
+
+		if (Aliens.size() > 1)
+		{
+			randomAlienIndex = GetRandomValue(0, static_cast<int>(Aliens.size() - 1));
+		}
+
+		const Projectile newProjectile({ Aliens[randomAlienIndex].position }, enemyProjectileSpeed);
+		enemyProjectiles.push_back(newProjectile);
+		shootTimer = 0;
+	}
+
+	//TODO: refactor cleanup into own function. 
+	//TODO: use ranged-fors instead
+	// REMOVE INACTIVE/DEAD ENITITIES
+	RemoveDeadEntities();
+}
+
+void Game::CheckIfGameOver()
+{
 	//End game if player dies
 	if (player.lives < 1)
 	{
@@ -93,22 +137,10 @@ void Game::GamePlayLogic()
 			End();
 		}
 	}
+}
 
-	//Spawn new aliens if aliens run out
-	if (Aliens.size() < 1)
-	{
-		SpawnAliens();
-	}
-
-	// Update background with offset
-	background.Update(static_cast<int>(player.position.x) - (GetScreenWidth() / 2));//TODO: Magic number
-
-	for (Wall& w : Walls)
-	{
-		w.Update();
-	}
-
-	//UPDATE PROJECTILE
+void Game::UpdateProjectiles()
+{
 	for (Projectile& pp : playerProjectiles)
 	{
 		pp.Update();
@@ -117,8 +149,10 @@ void Game::GamePlayLogic()
 	{
 		ep.Update();
 	}
+}
 
-	//UPDATE PROJECTILE
+void Game::ResolveProjectileCollisions()
+{
 	for (Projectile& p : playerProjectiles)
 	{
 		for (Alien& a : Aliens)
@@ -172,30 +206,10 @@ void Game::GamePlayLogic()
 			}
 		}
 	}
+}
 
-	//MAKE PROJECTILE
-	Shoot();
-
-	//TODO: consider making alien shooting more interesting and erratic. Now only one alient will shoot every 2 seconds, and it is random which one.
-	//Aliens Shooting
-	shootTimer += 1;
-	if (shootTimer > 59) //once per second
-	{
-		int randomAlienIndex = 0;
-
-		if (Aliens.size() > 1)
-		{
-			randomAlienIndex = GetRandomValue(0, static_cast<int>(Aliens.size() - 1));
-		}
-
-		const Projectile newProjectile({ Aliens[randomAlienIndex].position }, enemyProjectileSpeed);
-		enemyProjectiles.push_back(newProjectile);
-		shootTimer = 0;
-	}
-
-	//TODO: refactor cleanup into own function. 
-	//TODO: use ranged-fors instead
-	// REMOVE INACTIVE/DEAD ENITITIES
+void Game::RemoveDeadEntities()
+{
 	for (int i = 0; i < playerProjectiles.size(); i++)
 	{
 		if (playerProjectiles[i].active == false)
@@ -325,7 +339,7 @@ void Game::Render()
 	EndDrawing();
 }
 
-void Game::GamePlayDraw()
+void Game::GamePlayDraw() const noexcept
 {
 	//background render LEAVE THIS AT TOP
 	background.Render(bgTexture);

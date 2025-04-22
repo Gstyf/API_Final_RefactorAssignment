@@ -1,4 +1,5 @@
 #include "Player.hpp"
+#include "Constants.hpp"
 
 void Player::Update() noexcept
 {
@@ -8,9 +9,9 @@ void Player::Update() noexcept
 	{
 		position.x = 0 + radius;
 	}
-	else if (position.x > GetScreenWidth() - radius)
+	else if (position.x > _screenWidthF - radius)
 	{
-		position.x = GetScreenWidth() - radius;
+		position.x = _screenWidthF - radius;
 	}
 	//Determine frame for animation
 	timer += GetFrameTime();
@@ -42,5 +43,5 @@ Rectangle Player::GetRect(const MyTexture& texture) const noexcept
 
 float Player::GetMovement() const noexcept
 {
-	return static_cast<float>((IsKeyDown(KEY_RIGHT) - IsKeyDown(KEY_LEFT)));
+	return static_cast<float>(IsKeyDown(KEY_RIGHT)) - static_cast<float>(IsKeyDown(KEY_LEFT));
 }
