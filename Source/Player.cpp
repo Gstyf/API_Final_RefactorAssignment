@@ -13,15 +13,15 @@ void Player::Update() noexcept
 		direction++;
 	}
 
-	x_pos += speed * direction;
+	position.x += speed * direction;
 
-	if (x_pos < 0 + radius)
+	if (position.x < 0 + radius)
 	{
-		x_pos = 0 + radius;
+		position.x = 0 + radius;
 	}
-	else if (x_pos > GetScreenWidth() - radius)
+	else if (position.x > GetScreenWidth() - radius)
 	{
-		x_pos = GetScreenWidth() - radius;
+		position.x = GetScreenWidth() - radius;
 	}
 	//Determine frame for animation
 	timer += GetFrameTime();
@@ -40,7 +40,14 @@ void Player::Update() noexcept
 
 void Player::Render(const MyTexture& texture) const noexcept
 {
-	//float window_height = GetScreenHeight();
 	DrawTexture(texture.GetTexture(),
-		static_cast<int>(x_pos) - texture.WidthHalf(), GetScreenHeight() - texture.Height(), WHITE);
+		static_cast<int>(position.x) - texture.WidthHalf(), 
+		static_cast<int>(position.y) - texture.Height(), WHITE);
+}
+
+
+Rectangle Player::GetRect(const MyTexture& texture) const noexcept
+{
+	return Rectangle{ position.x - texture.WidthHalff(), position.y - texture.HeightHalff(),
+					texture.Widthf(), texture.Heightf() };
 }

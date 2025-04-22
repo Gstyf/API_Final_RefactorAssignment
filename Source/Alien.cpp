@@ -30,3 +30,9 @@ void Alien::Render(const MyTexture& texture) const noexcept
 		static_cast<int>(position.x) - texture.WidthHalf(),
 		static_cast<int>(position.y) - texture.HeightHalf(), WHITE);
 }
+
+Rectangle Alien::GetRect(const MyTexture& texture) const noexcept
+{
+	return Rectangle{ position.x - texture.WidthHalff(), position.y - texture.HeightHalff(),
+						texture.Widthf(), texture.Heightf() };
+}

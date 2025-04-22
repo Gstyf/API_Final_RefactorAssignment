@@ -12,8 +12,13 @@ void Projectile::Update() noexcept
 
 void Projectile::Render(const MyTexture& texture) const noexcept
 {
-	//DrawCircle((int)position.x, (int)position.y, 10, RED);
 	DrawTexture(texture.GetTexture(),
 		static_cast<int>(position.x) - texture.WidthHalf(),
 		static_cast<int>(position.y) - texture.HeightHalf(), WHITE);
+}
+
+Rectangle Projectile::GetRect(const MyTexture& texture) const noexcept
+{
+	return Rectangle{ position.x - texture.WidthHalff(), position.y - texture.HeightHalff(),
+						texture.Widthf(), texture.Heightf() };
 }

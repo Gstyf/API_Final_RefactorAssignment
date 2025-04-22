@@ -10,9 +10,9 @@
 class Player
 {
 public:
-	explicit Player(float xpos) noexcept : x_pos(xpos) {};
+	explicit Player(Vector2 startPos) noexcept : position(startPos) {};
 
-	float x_pos = 0;
+	Vector2 position = {};
 	float speed = 7;
 	float player_base_height = 100.0f;
 	float radius = 50;
@@ -20,9 +20,8 @@ public:
 	int direction = 0;
 	int activeTexture = 0;
 	float timer = 0;
-	Vector2 sizeOffset = { 0,0 };
-	Rectangle aabb = { 0,0,0,0 };
 
 	void Update() noexcept;
 	void Render(const MyTexture& texture) const noexcept;
+	Rectangle GetRect(const MyTexture& texture) const noexcept;
 };

@@ -21,4 +21,5 @@ public:
 
 	void Update() noexcept;
 	void Render(const MyTexture& texture) const noexcept;
+	Rectangle GetRect(const MyTexture& texture) const noexcept;
 };

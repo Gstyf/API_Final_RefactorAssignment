@@ -88,7 +88,7 @@ void Game::GamePlayLogic()
 	for (Alien& a : Aliens)
 	{
 		a.Update();
-		if (a.position.y > GetScreenHeight() - player.player_base_height)
+		if (a.position.y > static_cast<float>(GetScreenHeight()) - player.player_base_height)
 		{
 			End();
 		}
@@ -101,7 +101,7 @@ void Game::GamePlayLogic()
 	}
 
 	// Update background with offset
-	background.Update(static_cast<int>(player.x_pos) - (GetScreenWidth() / 2));//TODO: Magic number
+	background.Update(static_cast<int>(player.position.x) - (GetScreenWidth() / 2));//TODO: Magic number
 
 	for (Wall& w : Walls)
 	{
@@ -123,17 +123,12 @@ void Game::GamePlayLogic()
 	{
 		for (Alien& a : Aliens)
 		{
-			if (CheckCollisionRecs(
+			if (CheckCollisionRecs(a.GetRect(alienTexture),
 				{
-					a.position.x - alienTexture.WidthHalff(),
-					a.position.y - alienTexture.HeightHalff(),
-					alienTexture.Widthf(), alienTexture.Heightf()
-				},
-						{
-							p.position.x - laserTexture.WidthHalff(),
-							p.position.y - laserTexture.HeightHalff(),
-							laserTexture.Widthf(), laserTexture.Heightf()
-						}))
+					p.position.x - laserTexture.WidthHalff(),
+					p.position.y - laserTexture.HeightHalff(),
+					laserTexture.Widthf(), laserTexture.Heightf()
+				}))
 			{
 				// Kill!
 				std::cout << "Hit! \n";
@@ -145,18 +140,7 @@ void Game::GamePlayLogic()
 		}
 		for (Wall& w : Walls)
 		{
-			if (CheckCollisionRecs(
-				{
-					w.position.x - wallTexture.WidthHalff(),
-					w.position.y - wallTexture.HeightHalff(),
-					wallTexture.Widthf(), wallTexture.Heightf()
-				},
-						{
-							p.position.x - laserTexture.WidthHalff(),
-							p.position.y - laserTexture.HeightHalff(),
-							laserTexture.Widthf(), laserTexture.Heightf()
-						})
-				)
+			if (CheckCollisionRecs(w.GetRect(wallTexture), p.GetRect(laserTexture)))
 			{
 				// Kill!
 				std::cout << "Hit! \n";
@@ -170,18 +154,7 @@ void Game::GamePlayLogic()
 	//ENEMY PROJECTILES HERE
 	for (Projectile& e : enemyProjectiles)
 	{
-		if (CheckCollisionRecs(
-			{
-				player.x_pos - shipTextures[player.activeTexture].WidthHalff(),
-				GetScreenHeight() - shipTextures[player.activeTexture].Heightf(),
-				shipTextures[player.activeTexture].Widthf(), shipTextures[player.activeTexture].Heightf()
-			},
-						{
-							e.position.x - laserTexture.WidthHalff(),
-							e.position.y - laserTexture.HeightHalff(),
-							laserTexture.Widthf(), laserTexture.Heightf()
-						})
-			)
+		if (CheckCollisionRecs(player.GetRect(shipTextures.front()), e.GetRect(laserTexture)))
 		{
 			std::cout << "dead!\n";
 			e.active = false;
@@ -189,18 +162,7 @@ void Game::GamePlayLogic()
 		}
 		for (Wall& w : Walls)
 		{
-			if (CheckCollisionRecs(
-				{
-					w.position.x - wallTexture.WidthHalff(),
-					w.position.y - wallTexture.HeightHalff(),
-					wallTexture.Widthf(), wallTexture.Heightf()
-				},
-						{
-							e.position.x - laserTexture.WidthHalff(),
-							e.position.y - laserTexture.HeightHalff(),
-							laserTexture.Widthf(), laserTexture.Heightf()
-						})
-				)
+			if (CheckCollisionRecs(w.GetRect(wallTexture), e.GetRect(laserTexture)))
 			{
 				// Kill!
 				std::cout << "Hit! \n";
@@ -464,7 +426,7 @@ void Game::Shoot()
 {
 	if (IsKeyPressed(KEY_SPACE))
 	{
-		const Projectile newProjectile({ player.x_pos, static_cast<float>(GetScreenHeight()) }, playerProjectileSpeed);
+		const Projectile newProjectile({ player.position.x, static_cast<float>(GetScreenHeight()) }, playerProjectileSpeed);
 		playerProjectiles.push_back(newProjectile);
 	}
 }

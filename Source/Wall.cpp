@@ -1,5 +1,14 @@
 #include "Wall.hpp"
 
+void Wall::Update() noexcept
+{
+	// set walls as inactive when out of health
+	if (health < 1)
+	{
+		active = false;
+	}
+}
+
 void Wall::Render(const MyTexture& texture) const noexcept
 {
 	DrawTexture(texture.GetTexture(),
@@ -10,11 +19,9 @@ void Wall::Render(const MyTexture& texture) const noexcept
 		static_cast<int>(position.y) + 10, 40, RED);
 }
 
-void Wall::Update() noexcept
+Rectangle Wall::GetRect(const MyTexture& texture) const noexcept
 {
-	// set walls as inactive when out of health
-	if (health < 1)
-	{
-		active = false;
-	}
+	return Rectangle{ position.x - texture.WidthHalff(), position.y - texture.HeightHalff(),
+						texture.Widthf(), texture.Heightf() };
 }
+

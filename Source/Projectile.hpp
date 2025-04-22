@@ -10,12 +10,13 @@
 class Projectile
 {
 public:
-	Projectile(Vector2 spawnPos, int direction) noexcept : position(spawnPos), speed(direction) {}
+	Projectile(Vector2 spawnPos, float direction) noexcept : position(spawnPos), speed(direction) {}
 
 	Vector2 position = { 0,0 };
-	int speed = 0;
+	float speed = 0;
 	bool active = true;
 
 	void Update() noexcept;
 	void Render(const MyTexture& texture) const noexcept;
+	Rectangle GetRect(const MyTexture& texture) const noexcept;
 };

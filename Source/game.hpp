@@ -64,7 +64,7 @@ struct Game
 	//Aliens shooting
 	float shootTimer = 0;
 
-	Player player{ static_cast<float>(GetScreenWidth() / 2) };
+	Player player{{ static_cast<float>(GetScreenWidth() / 2), static_cast<float>(GetScreenHeight()) }};
 	std::vector<Wall> Walls;
 	std::vector<Alien> Aliens;
 
@@ -94,6 +94,7 @@ struct Game
 	void EndScreenLogic();
 
 	void HandleKeyboardInput();
+	int GetVectorLength(const std::vector<Alien>& vec);
 	
 	void Render();
 	void EndgameDraw();
