@@ -12,7 +12,7 @@ void Game::Start()
 	const float wall_distance = window_width / (wallCount + 1);
 	for (int i = 0; i < wallCount; i++)
 	{
-		const Wall newWalls({ wall_distance * (static_cast<float>(i) + 1), GetScreenHeight() - wallOffsetY });
+		const Wall newWalls({ wall_distance * (i + 1), GetScreenHeight() - wallOffsetY });
 		Walls.push_back(newWalls);
 	}
 
@@ -372,15 +372,18 @@ void Game::EndgameDraw()
 		if (mouseOnText)
 		{
 			// HOVER CONFIRMIATION
-			DrawRectangleLines((int)textBox.x, (int)textBox.y, (int)textBox.width, (int)textBox.height, RED);
+			DrawRectangleLines(static_cast<int>(textBox.x), static_cast<int>(textBox.y),
+				static_cast<int>(textBox.width), static_cast<int>(textBox.height), RED);
 		}
 		else
 		{
-			DrawRectangleLines((int)textBox.x, (int)textBox.y, (int)textBox.width, (int)textBox.height, DARKGRAY);
+			DrawRectangleLines(static_cast<int>(textBox.x), static_cast<int>(textBox.y),
+				static_cast<int>(textBox.width), static_cast<int>(textBox.height), DARKGRAY);
 		}
 
 		//Draw the name being typed out
-		DrawText(highscoreNameEntry.data(), (int)textBox.x + 5, (int)textBox.y + 8, 40, MAROON);
+		DrawText(highscoreNameEntry.data(), static_cast<int>(textBox.x) + 5, 
+			static_cast<int>(textBox.y) + 8, 40, MAROON);
 
 		//Draw the text explaining how many characters are used
 		DrawText(TextFormat("INPUT CHARS: %i/%i", letterCount, 8), 600, 600, 20, YELLOW);
@@ -392,7 +395,8 @@ void Game::EndgameDraw()
 				// Draw blinking underscore char
 				if (((framesCounter / 20) % 2) == 0)
 				{
-					DrawText("_", (int)textBox.x + 8 + MeasureText(highscoreNameEntry.data(), 40), (int)textBox.y + 12, 40, MAROON);
+					DrawText("_", static_cast<int>(textBox.x) + 8 + MeasureText(highscoreNameEntry.data(), 40),
+						static_cast<int>(textBox.y) + 12, 40, MAROON);
 				}
 			}
 			else
