@@ -102,6 +102,6 @@ struct Game
 	void Shoot();
 	void SpawnAliens();
 
-	bool CheckNewHighScore();
+	bool CheckNewHighScore() noexcept;
 	void InsertNewHighScore(std::string& name);
 };

@@ -101,7 +101,7 @@ void Game::GamePlayLogic()
 	}
 
 	// Update background with offset
-	background.Update( static_cast<int>(player.x_pos) - (GetScreenWidth() / 2) );//TODO: Magic number
+	background.Update(static_cast<int>(player.x_pos) - (GetScreenWidth() / 2));//TODO: Magic number
 
 	for (Wall& w : Walls)
 	{
@@ -223,7 +223,7 @@ void Game::GamePlayLogic()
 
 		if (Aliens.size() > 1)
 		{
-			randomAlienIndex = GetRandomValue(0, static_cast<int>(Aliens.size()) - 1);
+			randomAlienIndex = GetRandomValue(0, static_cast<int>(Aliens.size() - 1));
 		}
 
 		const Projectile newProjectile({ Aliens[randomAlienIndex].position }, enemyProjectileSpeed);
@@ -374,23 +374,23 @@ void Game::GamePlayDraw()
 	player.Render(shipTextures[player.activeTexture]);
 
 	//wall rendering 
-	for (Wall w : Walls)
+	for (const Wall& w : Walls)
 	{
 		w.Render(wallTexture);
 	}
 
 	//projectile rendering
-	for (Projectile p : playerProjectiles)
+	for (const Projectile& p : playerProjectiles)
 	{
 		p.Render(laserTexture);
 	}
-	for (Projectile e : enemyProjectiles)
+	for (const Projectile& e : enemyProjectiles)
 	{
 		e.Render(laserTexture);
 	}
 
 	//alien rendering  
-	for (Alien a : Aliens)
+	for (const Alien& a : Aliens)
 	{
 		a.Render(alienTexture);
 	}
@@ -479,13 +479,16 @@ void Game::SpawnAliens()
 	}
 }
 
-bool Game::CheckNewHighScore()
+bool Game::CheckNewHighScore() noexcept
 {
-	if (score > Leaderboard[4].score)
+	if (score > Leaderboard.back().score)
 	{
 		return true;
 	}
-	return false;
+	else
+	{
+		return false;
+	}
 }
 
 void Game::InsertNewHighScore(std::string& tName)
@@ -517,8 +520,8 @@ void Background::Update(int offs) noexcept
 
 void Background::Render(const MyTexture& texture) const noexcept
 {
-	DrawTexture(texture.GetTexture(), (GetScreenWidth() / 2) - texture.WidthHalf() - 
-		bgOffset, 0, WHITE);
+	DrawTexture(texture.GetTexture(),
+		(GetScreenWidth() / 2) - texture.WidthHalf() - bgOffset, 0, WHITE);
 }
 
 
