@@ -68,7 +68,7 @@ void Game::Update()
 	}
 }
 
-//TODO: Refactor A LOT!
+
 void Game::GamePlayLogic()
 {
 	if (IsKeyReleased(KEY_Q))
@@ -97,7 +97,6 @@ void Game::GamePlayLogic()
 	ResolveProjectileCollisions();
 	Shoot();
 
-	//TODO: consider making alien shooting more interesting and erratic. Now only one alient will shoot every 2 seconds, and it is random which one.
 	//Aliens Shooting
 	shootTimer += 1;
 	if (shootTimer > 59) //once per second
@@ -114,8 +113,6 @@ void Game::GamePlayLogic()
 		shootTimer = 0;
 	}
 
-	//TODO: refactor cleanup into own function. 
-	//TODO: use ranged-fors instead
 	// REMOVE INACTIVE/DEAD ENITITIES
 	RemoveDeadEntities();
 }
@@ -139,7 +136,7 @@ void Game::CheckIfGameOver()
 	}
 }
 
-void Game::UpdateProjectiles()
+void Game::UpdateProjectiles() noexcept
 {
 	for (Projectile& pp : playerProjectiles)
 	{
@@ -157,15 +154,8 @@ void Game::ResolveProjectileCollisions()
 	{
 		for (Alien& a : Aliens)
 		{
-			if (CheckCollisionRecs(a.GetRect(alienTexture),
-				{
-					p.position.x - laserTexture.WidthHalff(),
-					p.position.y - laserTexture.HeightHalff(),
-					laserTexture.Widthf(), laserTexture.Heightf()
-				}))
+			if (CheckCollisionRecs(a.GetRect(alienTexture), p.GetRect(shipTextures.front())))
 			{
-				// Kill!
-				std::cout << "Hit! \n";
 				// Set them as inactive, will be killed later
 				p.active = false;
 				a.active = false;
@@ -176,8 +166,6 @@ void Game::ResolveProjectileCollisions()
 		{
 			if (CheckCollisionRecs(w.GetRect(wallTexture), p.GetRect(laserTexture)))
 			{
-				// Kill!
-				std::cout << "Hit! \n";
 				// Set them as inactive, will be killed later
 				p.active = false;
 				w.health -= 1;
@@ -190,7 +178,6 @@ void Game::ResolveProjectileCollisions()
 	{
 		if (CheckCollisionRecs(player.GetRect(shipTextures.front()), e.GetRect(laserTexture)))
 		{
-			std::cout << "dead!\n";
 			e.active = false;
 			player.lives -= 1;
 		}
@@ -198,8 +185,6 @@ void Game::ResolveProjectileCollisions()
 		{
 			if (CheckCollisionRecs(w.GetRect(wallTexture), e.GetRect(laserTexture)))
 			{
-				// Kill!
-				std::cout << "Hit! \n";
 				// Set them as inactive, will be killed later
 				e.active = false;
 				w.health -= 1;
@@ -210,6 +195,8 @@ void Game::ResolveProjectileCollisions()
 
 void Game::RemoveDeadEntities()
 {
+	//TODO: refactor cleanup into own function. 
+	//TODO: use ranged-fors instead
 	for (int i = 0; i < playerProjectiles.size(); i++)
 	{
 		if (playerProjectiles[i].active == false)

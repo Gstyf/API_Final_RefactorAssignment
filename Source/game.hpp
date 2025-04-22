@@ -92,7 +92,7 @@ public:
 	void Update();
 	void GamePlayLogic();
 	void CheckIfGameOver();
-	void UpdateProjectiles();
+	void UpdateProjectiles() noexcept;
 	void ResolveProjectileCollisions();
 	void RemoveDeadEntities();
 	void EndScreenLogic();
