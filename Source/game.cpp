@@ -417,11 +417,12 @@ void Game::EndgameDraw()
 
 		DrawText("LEADERBOARD", 50, 100, 40, YELLOW);
 
-		for (int i = 0; i < Leaderboard.size(); i++)
+		int highscoreOffset = 0;
+		for (PlayerData pd : Leaderboard)
 		{
-			char* tempNameDisplay = Leaderboard[i].name.data();
-			DrawText(tempNameDisplay, 50, 140 + (i * 40), 40, YELLOW);
-			DrawText(TextFormat("%i", Leaderboard[i].score), 350, 140 + (i * 40), 40, YELLOW);
+			DrawText(pd.name.data(), 50, 140 + (highscoreOffset * 40), 40, YELLOW);
+			DrawText(TextFormat("%i", pd.score), 350, 140 + (highscoreOffset * 40), 40, YELLOW);
+			++highscoreOffset;
 		}
 	}
 }
