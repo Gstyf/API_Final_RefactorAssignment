@@ -19,10 +19,15 @@ constexpr float wallOffsetY = 200;
 //Projectile Constants
 constexpr int playerProjectileSpeed = 15;
 constexpr int enemyProjectileSpeed = -15;
+constexpr int projectileSpawnOffset = 50;
 
-//Alien Spawning Constants
+//Alien Constants
+constexpr int alienForwardMovement = 50;
 constexpr int formationWidth = 8;
 constexpr int formationHeight = 5;
 constexpr int alienSpacing = 90;
 constexpr float formationX = 100;
 constexpr float formationY = 50;
+
+//Player Constants
+constexpr int playerFloorOffsetY = 50;

@@ -9,6 +9,7 @@
 #include <stdexcept>
 #include <print>
 
+
 class MyTexture {
 	Texture2D myTex = {};
 public:

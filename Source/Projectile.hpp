@@ -10,7 +10,8 @@
 class Projectile
 {
 public:
-	Projectile(Vector2 spawnPos, float direction) noexcept : position(spawnPos), speed(direction) {}
+	Projectile(Vector2 spawnPos, float direction) noexcept : 
+		position(spawnPos), speed(direction) {}
 
 	Vector2 position = { 0,0 };
 	float speed = 0;

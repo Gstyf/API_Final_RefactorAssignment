@@ -9,8 +9,9 @@
 
 class MyWindow {
 public:
-	 MyWindow() {
-		InitWindow(_WINDOW_WIDTH, _WINDOW_HEIGHT, _WINDOW_TITLE.data());
+	MyWindow() = delete;
+	explicit MyWindow(std::string_view title) noexcept(false) {
+		InitWindow(_WINDOW_WIDTH, _WINDOW_HEIGHT, title.data());
 		if (!IsWindowReady())
 		{
 			throw std::runtime_error("Failed to open game window!");

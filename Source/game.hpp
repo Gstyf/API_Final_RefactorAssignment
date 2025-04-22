@@ -43,7 +43,7 @@ public:
 	explicit Game(State state) : gameState(state) {}
 
 	// Window
-	MyWindow myWindow;
+	MyWindow myWindow{ _WINDOW_TITLE };
 
 	// Gamestate
 	State gameState = {};
@@ -65,7 +65,7 @@ public:
 	//Aliens shooting
 	float shootTimer = 0;
 
-	Player player{{ _screenHalfWidthF, _screenHeightF }};
+	Player player{{ _screenHalfWidthF, _screenHeightF - playerFloorOffsetY }};
 	std::vector<Wall> Walls;
 	std::vector<Alien> Aliens;
 
@@ -91,21 +91,22 @@ public:
 	void Run();
 	
 	void Update();
-	void GamePlayLogic();
+	void GameplayUpdate();
 	void CheckIfGameOver() noexcept;
 	void UpdateProjectiles() noexcept;
 	void ResolveProjectileCollisions() noexcept;
+	void Shoot();
+	void AlienShoot();
+	void SpawnAliens();
 	void RemoveDeadEntities();
-	void EndScreenLogic();
-
+	
+	void EndscreenUpdate();
 	void HandleKeyboardInput();
 	
 	void Render();
 	void EndgameDraw();
 	void GamePlayDraw() const noexcept;
 
-	void Shoot();
-	void SpawnAliens();
 
 	bool CheckNewHighScore() noexcept;
 	void InsertNewHighScore(const std::string& name);

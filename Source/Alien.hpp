@@ -15,7 +15,6 @@ public:
 	Vector2 position = { 0, 0 };
 	static constexpr float radius = 30;
 	bool active = true;
-	bool moveRight = true;
 
 	float speed = 2;
 

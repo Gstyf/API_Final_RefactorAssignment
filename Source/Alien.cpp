@@ -3,25 +3,11 @@
 
 void Alien::Update() noexcept
 {
-	if (moveRight)
+	position.x += speed;
+	if (position.x >= _screenWidthF || position.x <= 0)
 	{
-		position.x += speed;
-
-		if (position.x >= _screenWidthF)
-		{
-			moveRight = false;
-			position.y += 50;
-		}
-	}
-	else
-	{
-		position.x -= speed;
-
-		if (position.x <= 0)
-		{
-			moveRight = true;
-			position.y += 50;
-		}
+		speed *= -1;
+		position.y += alienForwardMovement;
 	}
 }
 

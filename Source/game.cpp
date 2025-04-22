@@ -5,20 +5,13 @@
 #include <thread>
 #include <vector>
 
-void Game::Start()
-{
-	// creating walls 
+void Game::Start() {
 	constexpr float wall_distance = _screenWidthF / (wallCount + 1);
-	for (int i = 0; i < wallCount; i++)
-	{
-		const Wall newWalls({ wall_distance * (i + 1), GetScreenHeight() - wallOffsetY });
-		Walls.push_back(newWalls);
+	Walls.reserve(wallCount);
+	for (int i = 0; i < wallCount; i++) {
+		Walls.emplace_back(Vector2{ wall_distance * (i + 1.0f), _screenHeightF - wallOffsetY });
 	}
-
-	//creating aliens
 	SpawnAliens();
-
-	//reset score
 	score = 0;
 	gameState = State::GAMEPLAY;
 }
@@ -57,10 +50,10 @@ void Game::Update()
 		if (IsKeyReleased(KEY_SPACE)) Start();
 		break;
 	case State::GAMEPLAY:
-		GamePlayLogic();
+		GameplayUpdate();
 		break;
 	case State::ENDSCREEN:
-		EndScreenLogic();
+		EndscreenUpdate();
 		break;
 	default:
 		break;
@@ -68,7 +61,7 @@ void Game::Update()
 }
 
 
-void Game::GamePlayLogic()
+void Game::GameplayUpdate()
 {
 	if (IsKeyReleased(KEY_Q))
 	{
@@ -96,21 +89,7 @@ void Game::GamePlayLogic()
 	ResolveProjectileCollisions();
 	Shoot();
 
-	//Aliens Shooting
-	shootTimer += 1;
-	if (shootTimer > 59) //once per second
-	{
-		int randomAlienIndex = 0;
-
-		if (Aliens.size() > 1)
-		{
-			randomAlienIndex = GetRandomValue(0, static_cast<int>(Aliens.size() - 1));
-		}
-
-		const Projectile newProjectile({ Aliens[randomAlienIndex].position }, enemyProjectileSpeed);
-		enemyProjectiles.push_back(newProjectile);
-		shootTimer = 0;
-	}
+	AlienShoot();
 
 	// REMOVE INACTIVE/DEAD ENITITIES
 	RemoveDeadEntities();
@@ -192,8 +171,50 @@ void Game::ResolveProjectileCollisions() noexcept
 	}
 }
 
+void Game::Shoot()
+{
+	if (IsKeyPressed(KEY_SPACE))
+	{
+		const Projectile newProjectile(
+			{ player.position.x, player.position.y - projectileSpawnOffset }, playerProjectileSpeed);
+		playerProjectiles.push_back(newProjectile);
+	}
+}
+
+void Game::AlienShoot()
+{
+	//Aliens Shooting
+	shootTimer += 1;
+	if (shootTimer > 59) //once per second
+	{
+		int randomAlienIndex = 0;
+
+		//TODO: Find clever way to get size of array and size -1
+		if (Aliens.size() > 1)
+		{
+			randomAlienIndex = GetRandomValue(0, static_cast<int>(std::ssize(Aliens) - 1));
+		}
+
+		//TODO: Consider a GetRandomFromContainer() with a crash if the container is empty (ASSERT) WE ARE already checking that the container isn't empty, so safe?
+		const Projectile newProjectile({ Aliens[randomAlienIndex].position }, enemyProjectileSpeed);
+		enemyProjectiles.push_back(newProjectile);
+		shootTimer = 0;
+	}
+}
+
+void Game::SpawnAliens()
+{
+	for (int row = 0; row < formationHeight; row++) {
+		for (int col = 0; col < formationWidth; col++) {
+			const Alien newAlien({ formationX + 450 + (col * alienSpacing) , formationY + (row * alienSpacing) });
+			Aliens.push_back(newAlien);
+		}
+	}
+}
+
 void Game::RemoveDeadEntities()
 {
+	//TODO: use lambdas remove_if to move dead ones to back, and then erase dead entities
 	//TODO: use ranged-fors instead
 	for (int i = 0; i < playerProjectiles.size(); i++)
 	{
@@ -233,7 +254,7 @@ void Game::RemoveDeadEntities()
 	}
 }
 
-void Game::EndScreenLogic()
+void Game::EndscreenUpdate()
 {
 	//Exit end screen
 	if (IsKeyReleased(KEY_ENTER) && !newHighScore)
@@ -324,21 +345,15 @@ void Game::Render()
 
 void Game::GamePlayDraw() const noexcept
 {
-	//background render LEAVE THIS AT TOP
 	background.Render(bgTexture);
 	DrawText(TextFormat("Score: %i", score), 50, 20, 40, YELLOW);
 	DrawText(TextFormat("Lives: %i", player.lives), 50, 70, 40, YELLOW);
 
-	//player rendering 
-	player.Render(shipTextures[player.activeTexture]);
-
-	//wall rendering 
 	for (const Wall& w : Walls)
 	{
 		w.Render(wallTexture);
 	}
 
-	//projectile rendering
 	for (const Projectile& p : playerProjectiles)
 	{
 		p.Render(laserTexture);
@@ -348,16 +363,16 @@ void Game::GamePlayDraw() const noexcept
 		e.Render(laserTexture);
 	}
 
-	//alien rendering  
 	for (const Alien& a : Aliens)
 	{
 		a.Render(alienTexture);
 	}
+
+	player.Render(shipTextures[player.activeTexture]);
 }
 
 void Game::EndgameDraw()
 {
-	//Code
 	if (newHighScore)
 	{
 		DrawText("NEW HIGHSCORE!", 600, 300, 60, YELLOW);
@@ -379,7 +394,7 @@ void Game::EndgameDraw()
 		}
 
 		//Draw the name being typed out
-		DrawText(highscoreNameEntry.data(), static_cast<int>(textBox.x) + 5, 
+		DrawText(highscoreNameEntry.data(), static_cast<int>(textBox.x) + 5,
 			static_cast<int>(textBox.y) + 8, 40, MAROON);
 
 		//Draw the text explaining how many characters are used
@@ -424,25 +439,6 @@ void Game::EndgameDraw()
 	}
 }
 
-void Game::Shoot()
-{
-	if (IsKeyPressed(KEY_SPACE))
-	{
-		const Projectile newProjectile({ player.position.x, static_cast<float>(GetScreenHeight()) }, playerProjectileSpeed);
-		playerProjectiles.push_back(newProjectile);
-	}
-}
-
-void Game::SpawnAliens()
-{
-	for (int row = 0; row < formationHeight; row++) {
-		for (int col = 0; col < formationWidth; col++) {
-			const Alien newAlien({ formationX + 450 + (col * alienSpacing) , formationY + (row * alienSpacing) });
-			Aliens.push_back(newAlien);
-		}
-	}
-}
-
 bool Game::CheckNewHighScore() noexcept
 {
 	if (score > Leaderboard.back().score)
@@ -457,7 +453,7 @@ bool Game::CheckNewHighScore() noexcept
 
 void Game::InsertNewHighScore(const std::string& tName)
 {
-	PlayerData newData{tName, score};
+	PlayerData newData{ tName, score };
 
 	for (int i = 0; i < Leaderboard.size(); i++)
 	{
