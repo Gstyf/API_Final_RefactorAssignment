@@ -2,18 +2,7 @@
 
 void Player::Update() noexcept
 {
-	//Movement
-	direction = 0;
-	if (IsKeyDown(KEY_LEFT))
-	{
-		direction--;
-	}
-	if (IsKeyDown(KEY_RIGHT))
-	{
-		direction++;
-	}
-
-	position.x += speed * direction;
+	position.x += speed * GetMovement();
 
 	if (position.x < 0 + radius)
 	{
@@ -45,9 +34,13 @@ void Player::Render(const MyTexture& texture) const noexcept
 		static_cast<int>(position.y) - texture.Height(), WHITE);
 }
 
-
 Rectangle Player::GetRect(const MyTexture& texture) const noexcept
 {
 	return Rectangle{ position.x - texture.WidthHalff(), position.y - texture.HeightHalff(),
 					texture.Widthf(), texture.Heightf() };
+}
+
+float Player::GetMovement() const noexcept
+{
+	return static_cast<float>((IsKeyDown(KEY_RIGHT) - IsKeyDown(KEY_LEFT)));
 }

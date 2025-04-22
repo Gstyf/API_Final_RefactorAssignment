@@ -12,7 +12,7 @@ void Game::Start()
 	const float wall_distance = window_width / (wallCount + 1);
 	for (int i = 0; i < wallCount; i++)
 	{
-		const Wall newWalls({ wall_distance * (i + 1), static_cast<float>(GetScreenHeight() - 250) });
+		const Wall newWalls({ wall_distance * (static_cast<float>(i) + 1), GetScreenHeight() - wallOffsetY });
 		Walls.push_back(newWalls);
 	}
 
