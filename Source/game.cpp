@@ -8,8 +8,7 @@
 void Game::Start()
 {
 	// creating walls 
-	//_screenWidthFconst auto window_width = static_cast<float>(GetScreenWidth());
-	const float wall_distance = _screenWidthF / (wallCount + 1);
+	constexpr float wall_distance = _screenWidthF / (wallCount + 1);
 	for (int i = 0; i < wallCount; i++)
 	{
 		const Wall newWalls({ wall_distance * (i + 1), GetScreenHeight() - wallOffsetY });
@@ -24,7 +23,7 @@ void Game::Start()
 	gameState = State::GAMEPLAY;
 }
 
-void Game::End()
+void Game::End() noexcept
 {
 	//SAVE SCORE AND UPDATE SCOREBOARD
 	playerProjectiles.clear();
@@ -117,7 +116,7 @@ void Game::GamePlayLogic()
 	RemoveDeadEntities();
 }
 
-void Game::CheckIfGameOver()
+void Game::CheckIfGameOver() noexcept
 {
 	//End game if player dies
 	if (player.lives < 1)
@@ -148,7 +147,7 @@ void Game::UpdateProjectiles() noexcept
 	}
 }
 
-void Game::ResolveProjectileCollisions()
+void Game::ResolveProjectileCollisions() noexcept
 {
 	for (Projectile& p : playerProjectiles)
 	{
@@ -195,7 +194,6 @@ void Game::ResolveProjectileCollisions()
 
 void Game::RemoveDeadEntities()
 {
-	//TODO: refactor cleanup into own function. 
 	//TODO: use ranged-fors instead
 	for (int i = 0; i < playerProjectiles.size(); i++)
 	{
@@ -243,7 +241,6 @@ void Game::EndScreenLogic()
 		Continue();
 	}
 
-	//TODO: Refactor highscore screen into own function
 	if (newHighScore)
 	{
 		if (CheckCollisionPointRec(GetMousePosition(), textBox)) mouseOnText = true;
@@ -302,7 +299,6 @@ void Game::HandleKeyboardInput()
 	}
 }
 
-//TODO: Refactor biggly, this is a long function (130 lines)
 void Game::Render()
 {
 	BeginDrawing();
@@ -459,11 +455,9 @@ bool Game::CheckNewHighScore() noexcept
 	}
 }
 
-void Game::InsertNewHighScore(std::string& tName)
+void Game::InsertNewHighScore(const std::string& tName)
 {
-	PlayerData newData;
-	newData.name = tName;
-	newData.score = score;
+	PlayerData newData{tName, score};
 
 	for (int i = 0; i < Leaderboard.size(); i++)
 	{

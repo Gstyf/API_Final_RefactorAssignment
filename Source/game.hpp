@@ -24,6 +24,7 @@ enum struct State
 
 struct PlayerData
 {
+	PlayerData(const std::string& n, int s) : name(n), score(s) { }
 	std::string name;
 	int score;
 };
@@ -85,15 +86,15 @@ public:
 	int framesCounter = 0;
 
 	void Start();
-	void End();
+	void End() noexcept;
 	void Continue() noexcept;
 	void Run();
 	
 	void Update();
 	void GamePlayLogic();
-	void CheckIfGameOver();
+	void CheckIfGameOver() noexcept;
 	void UpdateProjectiles() noexcept;
-	void ResolveProjectileCollisions();
+	void ResolveProjectileCollisions() noexcept;
 	void RemoveDeadEntities();
 	void EndScreenLogic();
 
@@ -107,5 +108,5 @@ public:
 	void SpawnAliens();
 
 	bool CheckNewHighScore() noexcept;
-	void InsertNewHighScore(std::string& name);
+	void InsertNewHighScore(const std::string& name);
 };
