@@ -214,44 +214,21 @@ void Game::SpawnAliens()
 
 void Game::RemoveDeadEntities()
 {
-	//TODO: use lambdas remove_if to move dead ones to back, and then erase dead entities
-	//TODO: use ranged-fors instead
-	for (int i = 0; i < playerProjectiles.size(); i++)
-	{
-		if (playerProjectiles[i].active == false)
-		{
-			playerProjectiles.erase(playerProjectiles.begin() + i);
-			// Prevent the loop from skipping an instance because of index changes, since all insances after
-			// the killed objects are moved down in index. This is the same for all loops with similar function
-			i--;
-		}
-	}
-	for (int i = 0; i < enemyProjectiles.size(); i++)
-	{
-		if (enemyProjectiles[i].active == false)
-		{
-			enemyProjectiles.erase(enemyProjectiles.begin() + i);
-			// Prevent the loop from skipping an instance because of index changes, since all insances after
-			// the killed objects are moved down in index. This is the same for all loops with similar function
-			i--;
-		}
-	}
-	for (int i = 0; i < Aliens.size(); i++)
-	{
-		if (Aliens[i].active == false)
-		{
-			Aliens.erase(Aliens.begin() + i);
-			i--;
-		}
-	}
-	for (int i = 0; i < Walls.size(); i++)
-	{
-		if (Walls[i].active == false)
-		{
-			Walls.erase(Walls.begin() + i);
-			i--;
-		}
-	}
+	auto inactivePlayerProjectile = std::remove_if(playerProjectiles.begin(), playerProjectiles.end(),
+		[](const Projectile& projectile) { return !projectile.active; });
+	playerProjectiles.erase(inactivePlayerProjectile, playerProjectiles.end());
+
+	auto inactiveEnemyProjectile = std::remove_if(enemyProjectiles.begin(), enemyProjectiles.end(),
+		[](const Projectile& projectile) { return !projectile.active; });
+	enemyProjectiles.erase(inactiveEnemyProjectile, enemyProjectiles.end());
+
+	auto inactiveAliens = std::remove_if(Aliens.begin(), Aliens.end(),
+		[](const Alien& alien) { return !alien.active; });
+	Aliens.erase(inactiveAliens, Aliens.end());
+
+	auto inactiveWalls = std::remove_if(Walls.begin(), Walls.end(),
+		[](const Wall& wall) { return !wall.active; });
+	Walls.erase(inactiveWalls, Walls.end());
 }
 
 void Game::EndscreenUpdate()
