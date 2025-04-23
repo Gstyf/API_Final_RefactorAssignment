@@ -1,3 +1,7 @@
+
+#pragma warning(push)
+#pragma warning(disable: 26446) //gsl::at() warning
+#pragma warning(disable: 26472) //arithmatic conversion warning
 #include "game.hpp"
 #include <chrono>
 #include <fstream>
@@ -18,7 +22,6 @@ void Game::Start() {
 
 void Game::End() noexcept
 {
-	//SAVE SCORE AND UPDATE SCOREBOARD
 	playerProjectiles.clear();
 	enemyProjectiles.clear();
 	Walls.clear();
@@ -60,7 +63,6 @@ void Game::Update()
 	}
 }
 
-
 void Game::GameplayUpdate()
 {
 	if (IsKeyReleased(KEY_Q))
@@ -70,6 +72,7 @@ void Game::GameplayUpdate()
 	CheckIfGameOver();
 
 	player.Update();
+	// Update background with offset
 	background.Update(static_cast<int>(player.position.x) - (GetScreenWidth() / 2));
 
 	//Spawn new aliens if aliens run out
@@ -77,8 +80,6 @@ void Game::GameplayUpdate()
 	{
 		SpawnAliens();
 	}
-
-	// Update background with offset
 
 	for (Wall& w : Walls)
 	{
@@ -88,10 +89,7 @@ void Game::GameplayUpdate()
 	UpdateProjectiles();
 	ResolveProjectileCollisions();
 	Shoot();
-
 	AlienShoot();
-
-	// REMOVE INACTIVE/DEAD ENITITIES
 	RemoveDeadEntities();
 }
 
@@ -132,7 +130,7 @@ void Game::ResolveProjectileCollisions() noexcept
 	{
 		for (Alien& a : Aliens)
 		{
-			if (CheckCollisionRecs(a.GetRect(alienTexture), p.GetRect(shipTextures.front())))
+			if (p.active && CheckCollisionRecs(a.GetRect(alienTexture), p.GetRect(shipTextures.front())))
 			{
 				// Set them as inactive, will be killed later
 				p.active = false;
@@ -144,7 +142,7 @@ void Game::ResolveProjectileCollisions() noexcept
 		{
 			if (CheckCollisionRecs(w.GetRect(wallTexture), p.GetRect(laserTexture)))
 			{
-				// Set them as inactive, will be killed later
+				// Set as inactive, will be killed later
 				p.active = false;
 				w.health -= 1;
 			}
@@ -190,12 +188,10 @@ void Game::AlienShoot()
 		int randomAlienIndex = 0;
 
 		//TODO: Find clever way to get size of array and size -1
-		if (Aliens.size() > 1)
+		if (Aliens.size() > 1) //checking that we don't have an empty container!
 		{
-			randomAlienIndex = GetRandomValue(0, static_cast<int>(std::ssize(Aliens) - 1));
+			randomAlienIndex = GetRandomValue(0, static_cast<int>(Aliens.size()) - 1);
 		}
-
-		//TODO: Consider a GetRandomFromContainer() with a crash if the container is empty (ASSERT) WE ARE already checking that the container isn't empty, so safe?
 		const Projectile newProjectile({ Aliens[randomAlienIndex].position }, enemyProjectileSpeed);
 		enemyProjectiles.push_back(newProjectile);
 		shootTimer = 0;
@@ -377,23 +373,7 @@ void Game::EndgameDraw()
 		//Draw the text explaining how many characters are used
 		DrawText(TextFormat("INPUT CHARS: %i/%i", letterCount, 8), 600, 600, 20, YELLOW);
 
-		if (mouseOnText)
-		{
-			if (letterCount < 9)
-			{
-				// Draw blinking underscore char
-				if (((framesCounter / 20) % 2) == 0)
-				{
-					DrawText("_", static_cast<int>(textBox.x) + 8 + MeasureText(highscoreNameEntry.data(), 40),
-						static_cast<int>(textBox.y) + 12, 40, MAROON);
-				}
-			}
-			else
-			{
-				//Name needs to be shorter
-				DrawText("Press BACKSPACE to delete chars...", 600, 650, 20, YELLOW);
-			}
-		}
+		HandleMouseOverNameInput();
 		// Explain how to continue when name is input
 		if (letterCount > 0 && letterCount < 9)
 		{
@@ -416,6 +396,27 @@ void Game::EndgameDraw()
 	}
 }
 
+void Game::HandleMouseOverNameInput() noexcept
+{
+	if (mouseOnText)
+	{
+		if (letterCount < 9)
+		{
+			// Draw blinking underscore char
+			if (((framesCounter / 20) % 2) == 0)
+			{
+				DrawText("_", static_cast<int>(textBox.x) + 8 + MeasureText(highscoreNameEntry.data(), 40),
+					static_cast<int>(textBox.y) + 12, 40, MAROON);
+			}
+		}
+		else
+		{
+			//Name needs to be shorter
+			DrawText("Press BACKSPACE to delete chars...", 600, 650, 20, YELLOW);
+		}
+	}
+}
+
 bool Game::CheckNewHighScore() noexcept
 {
 	if (score > Leaderboard.back().score)
@@ -431,18 +432,13 @@ bool Game::CheckNewHighScore() noexcept
 void Game::InsertNewHighScore(const std::string& tName)
 {
 	PlayerData newData{ tName, score };
-
 	for (int i = 0; i < Leaderboard.size(); i++)
 	{
 		if (newData.score > Leaderboard[i].score)
 		{
-
 			Leaderboard.insert(Leaderboard.begin() + i, newData);
-
 			Leaderboard.pop_back();
-
-			i = static_cast<int>(Leaderboard.size());
-
+			return;
 		}
 	}
 }
@@ -458,5 +454,4 @@ void Background::Render(const MyTexture& texture) const noexcept
 	DrawTexture(texture.GetTexture(),
 		(GetScreenWidth() / 2) - texture.WidthHalf() - bgOffset, 0, WHITE);
 }
-
-
+#pragma warning(pop)

@@ -105,6 +105,7 @@ public:
 	
 	void Render();
 	void EndgameDraw();
+	void HandleMouseOverNameInput() noexcept;
 	void GamePlayDraw() const noexcept;
 
 
