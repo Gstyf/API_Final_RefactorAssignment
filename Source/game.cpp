@@ -1,7 +1,7 @@
 
 #pragma warning(push)
 #pragma warning(disable: 26446) //gsl::at() warning
-#pragma warning(disable: 26472) //arithmatic conversion warning
+#pragma warning(disable: 26472) //arithmetic conversion warning
 #include "game.hpp"
 #include <chrono>
 #include <fstream>
@@ -41,7 +41,6 @@ void Game::Run()
 	{
 		// Main game loop
 		Update();
-		Render();
 	}
 }
 
@@ -51,12 +50,14 @@ void Game::Update()
 	{
 	case State::STARTSCREEN:
 		if (IsKeyReleased(KEY_SPACE)) Start();
+		Render();
 		break;
 	case State::GAMEPLAY:
 		GameplayUpdate();
 		break;
 	case State::ENDSCREEN:
 		EndscreenUpdate();
+		Render();
 		break;
 	default:
 		break;
@@ -65,13 +66,10 @@ void Game::Update()
 
 void Game::GameplayUpdate()
 {
-	if (IsKeyReleased(KEY_Q))
-	{
-		End();
-	}
 	CheckIfGameOver();
 
 	player.Update();
+
 	// Update background with offset
 	background.Update(static_cast<int>(player.position.x) - (GetScreenWidth() / 2));
 
@@ -90,6 +88,9 @@ void Game::GameplayUpdate()
 	ResolveProjectileCollisions();
 	Shoot();
 	AlienShoot();
+
+	Render(); //render first, otherwise projectiles are removed before we can see them collide
+
 	RemoveDeadEntities();
 }
 
@@ -109,6 +110,11 @@ void Game::CheckIfGameOver() noexcept
 		{
 			End();
 		}
+	}
+	//or if the player hits the venerable Q key
+	if (IsKeyReleased(KEY_Q))
+	{
+		End();
 	}
 }
 
@@ -183,7 +189,7 @@ void Game::AlienShoot()
 {
 	//Aliens Shooting
 	shootTimer += 1;
-	if (shootTimer > 59) //once per second
+	if (shootTimer > 20) //three times per second
 	{
 		int randomAlienIndex = 0;
 
@@ -273,13 +279,16 @@ void Game::HandleKeyboardInput()
 	// Check if more characters have been pressed on the same frame
 	while (key > 0)
 	{
-		// NOTE: Only allow keys in range [32..125]
-		if ((key >= 32) && (key <= 125) && (letterCount < 9))
-		{
-			highscoreNameEntry += static_cast<char>(key);
-			letterCount++;
-		}
-		key = GetCharPressed();  // Check next character in the queue
+		[[gsl::suppress(26472, justification: "I KNOW! I'm not bothered. I'm not losing any data here!")]]
+			{
+				// NOTE: Only allow keys in range [32..125]
+				if ((key >= 32) && (key <= 125) && (letterCount < 9))
+				{
+					highscoreNameEntry += static_cast<char>(key);
+					letterCount++;
+				}
+				key = GetCharPressed();  // Check next character in the queue
+			}
 	}
 
 	//Remove chars 
