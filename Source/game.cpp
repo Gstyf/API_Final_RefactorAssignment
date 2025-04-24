@@ -210,21 +210,18 @@ void Game::SpawnAliens()
 
 void Game::RemoveDeadEntities()
 {
-	auto inactivePlayerProjectile = std::remove_if(playerProjectiles.begin(), playerProjectiles.end(),
-		[](const Projectile& projectile) { return !projectile.active; });
-	playerProjectiles.erase(inactivePlayerProjectile, playerProjectiles.end());
-
-	auto inactiveEnemyProjectile = std::remove_if(enemyProjectiles.begin(), enemyProjectiles.end(),
-		[](const Projectile& projectile) { return !projectile.active; });
-	enemyProjectiles.erase(inactiveEnemyProjectile, enemyProjectiles.end());
-
-	auto inactiveAliens = std::remove_if(Aliens.begin(), Aliens.end(),
-		[](const Alien& alien) { return !alien.active; });
-	Aliens.erase(inactiveAliens, Aliens.end());
-
-	auto inactiveWalls = std::remove_if(Walls.begin(), Walls.end(),
-		[](const Wall& wall) { return !wall.active; });
-	Walls.erase(inactiveWalls, Walls.end());
+	auto isDead = []( const auto& e ) { return !e.active; };
+	playerProjectiles.erase(std::remove_if(playerProjectiles.begin(),
+		playerProjectiles.end(), isDead), playerProjectiles.end());
+	
+	enemyProjectiles.erase(std::remove_if(enemyProjectiles.begin(),
+		enemyProjectiles.end(), isDead), enemyProjectiles.end());
+	
+	Aliens.erase(std::remove_if(Aliens.begin(),
+		Aliens.end(), isDead), Aliens.end());
+	
+	Walls.erase(std::remove_if(Walls.begin(),
+		Walls.end(), isDead), Walls.end());
 }
 
 void Game::EndscreenUpdate()
