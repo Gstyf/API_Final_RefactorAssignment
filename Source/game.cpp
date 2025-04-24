@@ -66,7 +66,6 @@ void Game::Update()
 
 void Game::GameplayUpdate()
 {
-	CheckIfGameOver();
 
 	player.Update();
 
@@ -83,6 +82,7 @@ void Game::GameplayUpdate()
 	{
 		w.Update();
 	}
+	CheckIfGameOver();
 
 	UpdateProjectiles();
 	ResolveProjectileCollisions();
