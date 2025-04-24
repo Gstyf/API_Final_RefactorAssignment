@@ -66,7 +66,6 @@ void Game::Update()
 
 void Game::GameplayUpdate()
 {
-
 	player.Update();
 
 	// Update background with offset
@@ -216,16 +215,16 @@ void Game::SpawnAliens()
 
 void Game::RemoveDeadEntities()
 {
-	auto isDead = []( const auto& e ) { return !e.active; };
+	auto isDead = [](const auto& e) { return !e.active; };
 	playerProjectiles.erase(std::remove_if(playerProjectiles.begin(),
 		playerProjectiles.end(), isDead), playerProjectiles.end());
-	
+
 	enemyProjectiles.erase(std::remove_if(enemyProjectiles.begin(),
 		enemyProjectiles.end(), isDead), enemyProjectiles.end());
-	
+
 	Aliens.erase(std::remove_if(Aliens.begin(),
 		Aliens.end(), isDead), Aliens.end());
-	
+
 	Walls.erase(std::remove_if(Walls.begin(),
 		Walls.end(), isDead), Walls.end());
 }
@@ -279,16 +278,13 @@ void Game::HandleKeyboardInput()
 	// Check if more characters have been pressed on the same frame
 	while (key > 0)
 	{
-		[[gsl::suppress(26472, justification: "I KNOW! I'm not bothered. I'm not losing any data here!")]]
-			{
-				// NOTE: Only allow keys in range [32..125]
-				if ((key >= 32) && (key <= 125) && (letterCount < 9))
-				{
-					highscoreNameEntry += static_cast<char>(key);
-					letterCount++;
-				}
-				key = GetCharPressed();  // Check next character in the queue
-			}
+		// NOTE: Only allow keys in range [32..125]
+		if ((key >= 32) && (key <= 125) && (letterCount < 9))
+		{
+			highscoreNameEntry += static_cast<char>(key);
+			letterCount++;
+		}
+		key = GetCharPressed();  // Check next character in the queue
 	}
 
 	//Remove chars 
@@ -458,7 +454,7 @@ void Background::Update(int offs) noexcept
 void Background::Render(const MyTexture& texture) const noexcept
 {
 	DrawTexture(texture.GetTexture(),
-		(GetScreenWidth() / 2) - texture.WidthHalf() - bgOffset, 
+		(GetScreenWidth() / 2) - texture.WidthHalf() - bgOffset,
 		0, WHITE);
 }
 #pragma warning(pop)
