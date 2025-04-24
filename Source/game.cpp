@@ -452,6 +452,7 @@ void Background::Update(int offs) noexcept
 void Background::Render(const MyTexture& texture) const noexcept
 {
 	DrawTexture(texture.GetTexture(),
-		(GetScreenWidth() / 2) - texture.WidthHalf() - bgOffset, 0, WHITE);
+		(GetScreenWidth() / 2) - texture.WidthHalf() - bgOffset, 
+		0, WHITE);
 }
 #pragma warning(pop)

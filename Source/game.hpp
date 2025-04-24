@@ -45,7 +45,7 @@ public:
 	// Window
 	MyWindow myWindow{ _WINDOW_TITLE };
 
-	// Gamestate
+	// Game state
 	State gameState = {};
 
 	MyTexture bgTexture{ "./Assets/Background.png" };
@@ -58,13 +58,6 @@ public:
 		MyTexture{"./Assets/Ship3.png"},
 	};
 
-	// Score
-	int score = 0;
-	bool newHighScore = false;
-
-	//Aliens shooting
-	float shootTimer = 0;
-
 	Player player{{ _screenHalfWidthF, _screenHeightF - playerFloorOffsetY }};
 	std::vector<Wall> Walls;
 	std::vector<Alien> Aliens;
@@ -74,13 +67,20 @@ public:
 
 	Background background;
 
+	// Score
+	int score = 0;
+	bool newHighScore = false;
+
+	//Aliens shooting
+	float shootTimer = 0;
+
 	std::vector<PlayerData> Leaderboard = { {"Player 1", 500}, {"Player 2", 400}, {"Player 3", 300}, {"Player 4", 200}, {"Player 5", 100} };
 
 	//TEXTBOX ENTER
 	std::string highscoreNameEntry = ""; 
 	int letterCount = 0;
 
-	Rectangle textBox = { 600, 500, 225, 50 };
+	Rectangle textBox = texboxRect;
 	bool mouseOnText = false;
 
 	int framesCounter = 0;
@@ -107,7 +107,6 @@ public:
 	void EndgameDraw();
 	void HandleMouseOverNameInput() noexcept;
 	void GamePlayDraw() const noexcept;
-
 
 	bool CheckNewHighScore() noexcept;
 	void InsertNewHighScore(const std::string& name);

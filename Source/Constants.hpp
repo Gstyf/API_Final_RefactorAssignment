@@ -31,3 +31,6 @@ constexpr float formationY = 50;
 
 //Player Constants
 constexpr int playerFloorOffsetY = 50;
+
+//Highscore constants
+constexpr Rectangle texboxRect = { 600, 500, 225, 50 };
